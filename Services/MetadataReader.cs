@@ -1,61 +1,57 @@
-﻿using System.Drawing;                   // Para manejar imágenes
+﻿using ImageMetadataTools.Models;      // Para acceder a MetadataInfo
+using System.Drawing;                   // Para manejar imágenes
 using System.Drawing.Imaging;
-using System.IO;
-using System.Text;
-using ImageMetadataTools.Models;      // Para acceder a MetadataInfo
 
 // lectura de información
 namespace ImageMetadataTools.Services
 {
     internal class MetadataReader
     {
-        public MetadataInfo GetMetadata( string imagePath)
+        public MetadataInfo? GetMetadata(string imagePath)
         {
-            MetadataInfo info = new ();  // instanciamos objeto donde vamos a guardar los metadatos
+            MetadataInfo info = new();  // instanciamos objeto donde vamos a guardar los metadatos
 
             try
             {
-                FileInfo fileInfo = new (imagePath);
-                using (Image img = Image.FromFile(imagePath))
+                FileInfo fileInfo = new(imagePath);
+                using Image img = Image.FromFile(imagePath);
+                info.FileName = Path.GetFileName(imagePath); //nombre del archivo
+                info.FileSize = $"{fileInfo.Length / 1024.0:F2} KB"; // peso en KB
+                info.Width = img.Width;
+                info.Height = img.Height;
+                info.Format = img.RawFormat.ToString();
+
+                foreach (PropertyItem prop in img.PropertyItems)
                 {
-                    info.FileName = Path.GetFileName(imagePath); //nombre del archivo
-                    info.FileSize= $"{fileInfo.Length / 1024.0:F2} KB"; // peso en KB
-                    info.Width = img.Width;
-                    info.Height = img.Height;
-                    info.Format = img.RawFormat.ToString();
-
-                    foreach (PropertyItem prop in img.PropertyItems)
+                    switch (prop.Id)
                     {
-                        switch (prop.Id) 
-                        {
-                            case 0x010F: info.CameraMake = GetString(prop); break;
-                            case 0x0110: info.CameraModel = GetString(prop); break;
-                            case 0x0131: info.Software = GetString(prop); break;
+                        case 0x010F: info.CameraMake = GetString(prop); break;
+                        case 0x0110: info.CameraModel = GetString(prop); break;
+                        case 0x0131: info.Software = GetString(prop); break;
 
-                            // Información de la fotografía
-                            case 0x0132: info.DateTaken = GetString(prop); break;
-                            case 0x9004: info.DateDigitized = GetString(prop); break;
-                            case 0x829A: info.ExposureTime = GetRationalString(prop); break;
-                            case 0x829D: info.Aperture = GetRationalString(prop); break;
-                            case 0x8827: info.ISO = GetShort(prop); break;
-                            case 0x920A: info.FocalLength = GetRationalString(prop); break;
-                            case 0x0112: info.Orientation = GetShort(prop); break;
-                            case 0x8822: info.ExposureProgram = GetShort(prop).ToString(); break;
-                            case 0x9207: info.MeteringMode = GetShort(prop).ToString(); break;
-                            case 0x9209: info.Flash = GetShort(prop) == 0 ? "No" : "Sí"; break;
+                        // Información de la fotografía
+                        case 0x0132: info.DateTaken = GetString(prop); break;
+                        case 0x9004: info.DateDigitized = GetString(prop); break;
+                        case 0x829A: info.ExposureTime = GetRationalString(prop); break;
+                        case 0x829D: info.Aperture = GetRationalString(prop); break;
+                        case 0x8827: info.ISO = GetShort(prop); break;
+                        case 0x920A: info.FocalLength = GetRationalString(prop); break;
+                        case 0x0112: info.Orientation = GetShort(prop); break;
+                        case 0x8822: info.ExposureProgram = GetShort(prop).ToString(); break;
+                        case 0x9207: info.MeteringMode = GetShort(prop).ToString(); break;
+                        case 0x9209: info.Flash = GetShort(prop) == 0 ? "No" : "Sí"; break;
 
-                            // Información del lente
-                            case 0xA433: info.LensMake = GetString(prop); break;
-                            case 0xA434: info.LensModel = GetString(prop); break;
-                            case 0xA403: info.WhiteBalance = GetShort(prop).ToString(); break;
-                            case 0x9208: info.LightSource = GetShort(prop).ToString(); break;
-                            case 0xA404: info.DigitalZoomRatio = GetRationalString(prop); break;
+                        // Información del lente
+                        case 0xA433: info.LensMake = GetString(prop); break;
+                        case 0xA434: info.LensModel = GetString(prop); break;
+                        case 0xA403: info.WhiteBalance = GetShort(prop).ToString(); break;
+                        case 0x9208: info.LightSource = GetShort(prop).ToString(); break;
+                        case 0xA404: info.DigitalZoomRatio = GetRationalString(prop); break;
 
-                            // GPS
-                            case 0x0002: info.GPSLatitude = GetGPS(prop); break;
-                            case 0x0004: info.GPSLongitude = GetGPS(prop); break;
-                            case 0x0006: info.GPSAltitude = GetRationalString(prop); break;
-                        }
+                        // GPS
+                        case 0x0002: info.GPSLatitude = GetGPS(prop); break;
+                        case 0x0004: info.GPSLongitude = GetGPS(prop); break;
+                        case 0x0006: info.GPSAltitude = GetRationalString(prop); break;
                     }
                 }
             }
@@ -78,10 +74,10 @@ namespace ImageMetadataTools.Services
                 // Cualquier otro error inesperado
                 Console.WriteLine("Ocurrió un error al leer la imagen:");
                 Console.WriteLine(ex.Message);
-            return null;            
+                return null;
 
             }
-            
+
 
             return info;
         }
@@ -92,15 +88,18 @@ namespace ImageMetadataTools.Services
            GetShort          → convierte valores pequeños a enteros.
            GetGPS            → convierte coordenadas GPS en grados decimales.
          */
-         
+
         /* Convierte los bytes (prop.Value) a un string usando codificación ASCII.
            Trim('\0') elimina los caracteres nulos (\0) que muchas veces vienen al final del texto.*/
-        private string GetString(PropertyItem prop) => System.Text.Encoding.ASCII.GetString(prop.Value).Trim('\0');
+        private static string GetString(PropertyItem prop)
+        {
+            return System.Text.Encoding.ASCII.GetString(prop.Value).Trim('\0');
+        }
 
         /*Muchos datos EXIF como la apertura, tiempo de exposición o longitud focal están guardados como una fracción (rational):
          * numerador/denominador.
          */
-        private string GetRationalString(PropertyItem prop)
+        private static string GetRationalString(PropertyItem prop)
         {
             //BitConverter es la herramienta para traducir bytes → números.
             uint numerator = BitConverter.ToUInt32(prop.Value, 0);
@@ -110,11 +109,11 @@ namespace ImageMetadataTools.Services
         }
         /*Convierte los primeros 2 bytes (UInt16) en un número entero.
          Se usa en EXIF para datos pequeños como orientación, ISO, flash, balance de blancos.*/
-        private int GetShort(PropertyItem prop) => BitConverter.ToUInt16(prop.Value, 0);
+        private static int GetShort(PropertyItem prop) => BitConverter.ToUInt16(prop.Value, 0);
 
         /*Convierte las coordenadas GPS que están en formato grados, minutos, segundos (DMS) a un número decimal más fácil de usar.
         Divide cada parte (grados, minutos, segundos) por su denominador y suma la conversión.*/
-        private string GetGPS(PropertyItem prop)
+        private static string? GetGPS(PropertyItem prop)
         {
             if (prop.Value.Length < 24) return null;
 

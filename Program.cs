@@ -1,5 +1,4 @@
-﻿
-using ImageMetadataTools.Models;
+﻿using ImageMetadataTools.Models;
 using ImageMetadataTools.Services;
 
 
@@ -8,7 +7,7 @@ namespace ImageMetadataTools
 {
     internal class Program
     {
-        private static MetadataInfo metadata;
+        private static MetadataInfo? metadata;
         static void Main(string[] args)
         {
 
@@ -93,7 +92,7 @@ namespace ImageMetadataTools
         private static void ProcesarImagenExif()
         {
             string imagePath = PedirRuta();
-            if (!validarArchivo(imagePath)) return;
+            if (!ValidarArchivo(imagePath)) return;
             MetadataReader reader = new (); //instanciamos
             metadata = reader.GetMetadata(imagePath);//ruta de la imagen y saca información
             if (metadata != null)
@@ -174,7 +173,7 @@ namespace ImageMetadataTools
         }
 
         //valida si un archivo existe y su formato
-        private static bool validarArchivo(string imagePath)
+        private static bool ValidarArchivo(string imagePath)
         {
             //archivo existe?
            if (!System.IO.File.Exists(imagePath)) {
