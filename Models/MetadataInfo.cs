@@ -38,5 +38,4 @@
         public required string LightSource { get; set; }
         public required string DigitalZoomRatio { get; set; }
     }
-
 }

@@ -5,21 +5,45 @@ using System.Drawing.Imaging;
 // lectura de información
 namespace ImageMetadataTools.Services
 {
-    internal class MetadataReader
+    public class MetadataReader
     {
-        public MetadataInfo? GetMetadata(string imagePath)
+        public static MetadataInfo? GetMetadata(string imagePath)
         {
-            MetadataInfo info = new();  // instanciamos objeto donde vamos a guardar los metadatos
-
             try
             {
                 FileInfo fileInfo = new(imagePath);
                 using Image img = Image.FromFile(imagePath);
-                info.FileName = Path.GetFileName(imagePath); //nombre del archivo
-                info.FileSize = $"{fileInfo.Length / 1024.0:F2} KB"; // peso en KB
-                info.Width = img.Width;
-                info.Height = img.Height;
-                info.Format = img.RawFormat.ToString();
+
+                // Estableciendo todas las propiedades.
+                MetadataInfo info = new()
+                {
+                    FileName = Path.GetFileName(imagePath),
+                    FileSize = $"{fileInfo.Length / 1024.0:F2} KB",
+                    Width = img.Width,
+                    Height = img.Height,
+                    Format = img.RawFormat.ToString(),
+                    Orientation = 0,
+                    CameraMake = string.Empty,
+                    CameraModel = string.Empty,
+                    Software = string.Empty,
+                    DateTaken = string.Empty,
+                    DateDigitized = string.Empty,
+                    ExposureTime = string.Empty,
+                    Aperture = string.Empty,
+                    ISO = 0,
+                    FocalLength = string.Empty,
+                    ExposureProgram = string.Empty,
+                    MeteringMode = string.Empty,
+                    Flash = string.Empty,
+                    GPSLatitude = string.Empty,
+                    GPSLongitude = string.Empty,
+                    GPSAltitude = string.Empty,
+                    LensMake = string.Empty,
+                    LensModel = string.Empty,
+                    WhiteBalance = string.Empty,
+                    LightSource = string.Empty,
+                    DigitalZoomRatio = string.Empty
+                };
 
                 foreach (PropertyItem prop in img.PropertyItems)
                 {
@@ -28,7 +52,6 @@ namespace ImageMetadataTools.Services
                         case 0x010F: info.CameraMake = GetString(prop); break;
                         case 0x0110: info.CameraModel = GetString(prop); break;
                         case 0x0131: info.Software = GetString(prop); break;
-
                         // Información de la fotografía
                         case 0x0132: info.DateTaken = GetString(prop); break;
                         case 0x9004: info.DateDigitized = GetString(prop); break;
@@ -40,20 +63,19 @@ namespace ImageMetadataTools.Services
                         case 0x8822: info.ExposureProgram = GetShort(prop).ToString(); break;
                         case 0x9207: info.MeteringMode = GetShort(prop).ToString(); break;
                         case 0x9209: info.Flash = GetShort(prop) == 0 ? "No" : "Sí"; break;
-
                         // Información del lente
                         case 0xA433: info.LensMake = GetString(prop); break;
                         case 0xA434: info.LensModel = GetString(prop); break;
                         case 0xA403: info.WhiteBalance = GetShort(prop).ToString(); break;
                         case 0x9208: info.LightSource = GetShort(prop).ToString(); break;
                         case 0xA404: info.DigitalZoomRatio = GetRationalString(prop); break;
-
-                        // GPS
-                        case 0x0002: info.GPSLatitude = GetGPS(prop); break;
-                        case 0x0004: info.GPSLongitude = GetGPS(prop); break;
+                        // Información GPS
+                        case 0x0002: info.GPSLatitude = GetGPS(prop) ?? string.Empty; break;
+                        case 0x0004: info.GPSLongitude = GetGPS(prop) ?? string.Empty; break;
                         case 0x0006: info.GPSAltitude = GetRationalString(prop); break;
                     }
                 }
+                return info;
             }
             catch (FileNotFoundException rutaNoExiste)
             {
@@ -64,7 +86,7 @@ namespace ImageMetadataTools.Services
             }
             catch (OutOfMemoryException imagenNoValida)
             {
-                // Esta excepción ocurre si el archivo no es una imagen válida
+                // Captura si el archivo no es una imagen válida.
                 Console.WriteLine("¡Error! El archivo no es una imagen válida:");
                 Console.WriteLine(imagenNoValida.Message);
                 return null;
@@ -75,11 +97,7 @@ namespace ImageMetadataTools.Services
                 Console.WriteLine("Ocurrió un error al leer la imagen:");
                 Console.WriteLine(ex.Message);
                 return null;
-
             }
-
-
-            return info;
         }
 
         /*

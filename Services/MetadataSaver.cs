@@ -3,7 +3,7 @@
 //Guardar información en archivos 
 namespace ImageMetadataTools.Services
 {
-    internal class MetadataSaver
+    public class MetadataSaver
     {
         public static void GuardarEnArchivo(MetadataInfo metadata)
         {
@@ -45,4 +45,3 @@ namespace ImageMetadataTools.Services
         }
     }
 }
-
