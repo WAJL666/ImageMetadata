@@ -45,44 +45,10 @@ namespace ImageMetadataTools.UI
         //Opcion 2. guarda metadatos en archivo plano txt
         void GuardarInformacion()
         {
-            if (metadata == null)
-            {
-                MostrarError("No hay metadatos cargados. Primero procese una imagen.");
-                return;
-            }
-            string ruta = metadata.FileName;
-            File.WriteAllText(ruta, GenerarTexto(metadata));
-
-            Console.WriteLine($" Metadatos guardados en: {ruta}");
+            MetadataSaver.GuardarEnArchivo(metadata);
             VolverAlMenu();
         }
 
-        //saca los metadatos para retornar la información para guadarlo en texto
-        string? GenerarTexto(MetadataInfo meta)
-        {
-            return
-                 $"Archivo: {meta.FileName}\n" +
-                 $"Peso: {meta.FileSize}\n" +
-                 $"Dimensiones: {meta.Width}x{meta.Height}\n" +
-                 $"Formato: {meta.Format}\n" +
-                 $"Orientación: {meta.Orientation}\n" +
-                 $"Cámara: {meta.CameraMake} {meta.CameraModel}\n" +
-                 $"Software: {meta.Software}\n" +
-                 $"Fecha captura: {meta.DateTaken}\n" +
-                 $"Fecha digitalización: {meta.DateDigitized}\n" +
-                 $"Exposición: {meta.ExposureTime}\n" +
-                 $"Apertura: {meta.Aperture}\n" +
-                 $"ISO: {meta.ISO}\n" +
-                 $"Distancia focal: {meta.FocalLength}\n" +
-                 $"Programa de exposición: {meta.ExposureProgram}\n" +
-                 $"Medición de luz: {meta.MeteringMode}\n" +
-                 $"Flash: {meta.Flash}\n" +
-                 $"Lente: {meta.LensMake} {meta.LensModel}\n" +
-                 $"Balance blancos: {meta.WhiteBalance}\n" +
-                 $"Fuente de luz: {meta.LightSource}\n" +
-                 $"Zoom digital: {meta.DigitalZoomRatio}\n" +
-                 $"GPS: {meta.GPSLatitude}, {meta.GPSLongitude}, Altitud: {meta.GPSAltitude}";
-        }
 
         //Opcion 1, muestra los metadatos
         void ProcesarImagenExif()
@@ -180,7 +146,7 @@ namespace ImageMetadataTools.UI
         private string PedirRuta()
         {
             Console.Write("\n\nIngrese la ruta completa de la imagen: ");
-            return Console.ReadLine();
+           return Console.ReadLine().Trim('"');
         }
 
         //valida si un archivo existe y su formato

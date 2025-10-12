@@ -1,4 +1,5 @@
 ﻿using ImageMetadataTools.Models;
+using ImageMetadataTools.UI;
 
 //Guardar información en archivos 
 namespace ImageMetadataTools.Services
@@ -8,40 +9,46 @@ namespace ImageMetadataTools.Services
         public static void GuardarEnArchivo(MetadataInfo metadata)
         {
             // Carpeta donde se guardará (la misma de la imagen)
-            string carpeta = Path.GetDirectoryName(metadata.FileName);
-            string nombreArchivo = Path.GetFileNameWithoutExtension(metadata.FileName);
-
-            Directory.CreateDirectory(carpeta);
-
-            // Guardar como TXT
-
-            string rutaTxt = Path.Combine(carpeta, nombreArchivo);
-            using (StreamWriter escribir = new(rutaTxt, true))
+            if (metadata == null)
             {
-                escribir.WriteLine("================================");
-                escribir.WriteLine("Archivo: " + metadata.FileName);
-                escribir.WriteLine("Peso: " + metadata.FileSize);
-                escribir.WriteLine("Dimensiones: " + metadata.Width + " x " + metadata.Height);
-                escribir.WriteLine("Formato: " + metadata.Format);
-                escribir.WriteLine("Orientación: " + metadata.Orientation);
-                escribir.WriteLine("Software:: " + metadata.Software);
-                escribir.WriteLine("Fecha captura: " + metadata.DateTaken);
-                escribir.WriteLine("Fecha digitalización: " + metadata.DateDigitized);
-                escribir.WriteLine("Exposición: " + metadata.ExposureTime);
-                escribir.WriteLine("Apertura: " + metadata.Aperture);
-                escribir.WriteLine("ISO:  " + metadata.ISO);
-                escribir.WriteLine("Distancia focal: " + metadata.FocalLength);
-                escribir.WriteLine("Programa de exposición: " + metadata.ExposureProgram);
-                escribir.WriteLine("Medición de luz: " + metadata.MeteringMode);
-                escribir.WriteLine("Flash: " + metadata.Flash);
-                escribir.WriteLine("Lente: " + metadata.LensMake + metadata.LensModel);
-                escribir.WriteLine("Balance blancos: " + metadata.WhiteBalance);
-                escribir.WriteLine("Fuente de luz:" + metadata.LightSource);
-                escribir.WriteLine("Zoom digital: " + metadata.DigitalZoomRatio);
-                escribir.WriteLine("GPS: Latitud: " + metadata.GPSLatitude + ", Longitud: " + metadata.GPSLongitude + ", Altitud: " + metadata.GPSAltitude);
-                escribir.WriteLine("================================\n");
+                MenuPrincipal ui=new ();
+               ui.MostrarError("No hay metadatos cargados. Primero procese una imagen.");
+                return;
             }
-            Console.WriteLine($"✅ Metadatos guardados en: {rutaTxt}");
+            string carpeta = Path.GetDirectoryName(metadata.FullPack) ?? ".";
+            string nombreArchivo = Path.GetFileNameWithoutExtension(metadata.FileName);
+            string rutaTxt = Path.Combine(carpeta, nombreArchivo + "_metadatos.txt");
+
+            File.WriteAllText(rutaTxt, GenerarTexto(metadata));
+
+            Console.WriteLine($" Metadatos guardados en: {rutaTxt}");
+        }
+
+        //saca los metadatos para retornar la información para guadarlo en texto
+        private static string? GenerarTexto(MetadataInfo meta)
+        {
+            return
+                 $"Archivo: {meta.FileName}\n" +
+                 $"Peso: {meta.FileSize}\n" +
+                 $"Dimensiones: {meta.Width}x{meta.Height}\n" +
+                 $"Formato: {meta.Format}\n" +
+                 $"Orientación: {meta.Orientation}\n" +
+                 $"Cámara: {meta.CameraMake} {meta.CameraModel}\n" +
+                 $"Software: {meta.Software}\n" +
+                 $"Fecha captura: {meta.DateTaken}\n" +
+                 $"Fecha digitalización: {meta.DateDigitized}\n" +
+                 $"Exposición: {meta.ExposureTime}\n" +
+                 $"Apertura: {meta.Aperture}\n" +
+                 $"ISO: {meta.ISO}\n" +
+                 $"Distancia focal: {meta.FocalLength}\n" +
+                 $"Programa de exposición: {meta.ExposureProgram}\n" +
+                 $"Medición de luz: {meta.MeteringMode}\n" +
+                 $"Flash: {meta.Flash}\n" +
+                 $"Lente: {meta.LensMake} {meta.LensModel}\n" +
+                 $"Balance blancos: {meta.WhiteBalance}\n" +
+                 $"Fuente de luz: {meta.LightSource}\n" +
+                 $"Zoom digital: {meta.DigitalZoomRatio}\n" +
+                 $"GPS: {meta.GPSLatitude}, {meta.GPSLongitude}, Altitud: {meta.GPSAltitude}";
         }
     }
 }

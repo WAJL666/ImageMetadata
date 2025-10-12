@@ -3,6 +3,7 @@
     public class MetadataInfo
     {
         // ---- Información básica de la imagen ----
+        public string? FullPack { get; internal set; }
         public required string FileName { get; set; }           // Nombre del archivo
         public required string FileSize { get; set; }           //peso
         public int Width { get; set; }                          // Ancho en píxeles
@@ -37,5 +38,6 @@
         public required string WhiteBalance { get; set; }
         public required string LightSource { get; set; }
         public required string DigitalZoomRatio { get; set; }
+      
     }
 }

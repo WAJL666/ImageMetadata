@@ -19,6 +19,7 @@ namespace ImageMetadataTools.Services
                 // Estableciendo todas las propiedades.
                 MetadataInfo info = new()
                 {
+                    FullPack = imagePath,
                     FileName = Path.GetFileName(imagePath),
                     FileSize = $"{fileInfo.Length / 1024.0:F2} KB",
                     Width = img.Width,
