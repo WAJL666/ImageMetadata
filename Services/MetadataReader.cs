@@ -1,7 +1,8 @@
 ﻿using ImageMetadataTools.Models;      // Para acceder a MetadataInfo
 using System.Drawing;                   // Para manejar imágenes
 using System.Drawing.Imaging;
-using ImageMetadataTools.UI;         // Para mostrar mensajes de error  
+using ImageMetadataTools.UI;
+using ImageMetadataTools.css;         // Para mostrar mensajes de error  
 
 // lectura de información
 namespace ImageMetadataTools.Services
@@ -82,21 +83,21 @@ namespace ImageMetadataTools.Services
             catch (FileNotFoundException rutaNoExiste)
             {
                 // Captura si la ruta no existe o el archivo no está en la ubicación indicada.
-                MenuPrincipal.MostrarError("No se encontró la imagen. Verifique la ruta e intente nuevamente.");
+                Style.MostrarError("No se encontró la imagen. Verifique la ruta e intente nuevamente.");
                 Console.WriteLine(rutaNoExiste.Message);
                 return null;
             }
             catch (OutOfMemoryException imagenNoValida)
             {
                 // Captura si el archivo no es una imagen válida.
-                MenuPrincipal.MostrarError("El archivo no es una imagen válida o está corrupto.");
+                Style.MostrarError("El archivo no es una imagen válida o está corrupto.");
                 Console.WriteLine(imagenNoValida.Message);
                 return null;
             }
             catch (Exception ex)
             {
                 // Cualquier otro error inesperado
-                MenuPrincipal.MostrarError("Ocurrió un error inesperado al procesar la imagen.");
+                Style.MostrarError("Ocurrió un error inesperado al procesar la imagen.");
                 Console.WriteLine(ex.Message);
                 return null;
             }

@@ -1,4 +1,5 @@
-﻿using ImageMetadataTools.Models;
+﻿using ImageMetadataTools.css;
+using ImageMetadataTools.Models;
 using ImageMetadataTools.Services;
 
 namespace ImageMetadataTools.UI
@@ -46,7 +47,7 @@ namespace ImageMetadataTools.UI
         {
             if (metadata == null)
             {
-                MostrarError("No hay metadatos para guardar. Procese una imagen primero.");
+                Style.MostrarError("No hay metadatos para guardar. Procese una imagen primero.");
                 return;
             }
             MetadataSaver.GuardarEnArchivo(metadata);
@@ -63,21 +64,21 @@ namespace ImageMetadataTools.UI
             metadata = MetadataReader.GetMetadata(imagePath);//ruta de la imagen y saca información
             if (metadata != null)
             {
-                MostrarLiena();
+                Style.MostrarLiena();
                 //Información básica
-                MostrarTitulo("Información Basica", ConsoleColor.Cyan);
+                Style.MostrarTitulo("Información Basica", ConsoleColor.Cyan);
                 Console.WriteLine("Archivo: " + metadata.FileName);
                 Console.WriteLine("Peso: " + metadata.FileSize);
                 Console.WriteLine("Dimensiones: " + metadata.Width + " x " + metadata.Height);
                 Console.WriteLine("Formato: " + metadata.Format);
                 Console.WriteLine("Orientación: " + metadata.Orientation);
                 //Información de la cámara
-                MostrarTitulo("Información de la cámara", ConsoleColor.Magenta);
+                Style.MostrarTitulo("Información de la cámara", ConsoleColor.Magenta);
                 Console.WriteLine("Fabricante de la cámara: " + metadata.CameraMake);
                 Console.WriteLine("Modelo de la cámara: " + metadata.CameraModel);
                 Console.WriteLine("Software que generó la foto: " + metadata.Software);
                 //Información de la fotografía
-                MostrarTitulo("Información de la fotografía", ConsoleColor.Blue);
+                Style.MostrarTitulo("Información de la fotografía", ConsoleColor.Blue);
                 Console.WriteLine("Fecha de captura: " + metadata.DateTaken);
                 Console.WriteLine("Fecha digitalización: " + metadata.DateDigitized);
                 Console.WriteLine("Tiempo de exposición: " + metadata.ExposureTime);
@@ -88,58 +89,29 @@ namespace ImageMetadataTools.UI
                 Console.WriteLine("Medición de luz: " + metadata.LightSource);
                 Console.WriteLine("Flash usado (sí/no): " + metadata.Flash);
                 //Información del lente
-                MostrarTitulo("Información del lente", ConsoleColor.DarkYellow);
+                Style.MostrarTitulo("Información del lente", ConsoleColor.DarkYellow);
                 Console.WriteLine("Fabricante del lente: " + metadata.LensMake);
                 Console.WriteLine("Modelo del lente: " + metadata.LensModel);
                 Console.WriteLine("Balance de blancos: " + metadata.WhiteBalance);
                 Console.WriteLine("LightSource: " + metadata.LightSource);
                 Console.WriteLine("Zoom: " + metadata.DigitalZoomRatio);
                 //Información GPS
-                MostrarTitulo("Información del GPS", ConsoleColor.Yellow);
+                Style.MostrarTitulo("Información del GPS", ConsoleColor.Yellow);
                 Console.WriteLine("Latitud: " + metadata.GPSLatitude);
                 Console.WriteLine("Longitud: " + metadata.GPSLongitude);
                 Console.WriteLine("Altitud: " + metadata.GPSAltitude);
-                MostrarLiena();
+                Style.MostrarLiena();
             }
             else
             {
-                MostrarError("No se pudieron leer los metadatos EXIF");
+                Style.MostrarError("No se pudieron leer los metadatos EXIF");
             }
             VolverAlMenu();
         }
         #endregion Menu
 
-        #region colores
-        //Aplicar color a la linea 
-        private static void MostrarLiena()
-        {
-            Console.ForegroundColor = ConsoleColor.DarkGray;//aplicar color
-            Console.WriteLine("\n──────────────────────────────────────────────────────────────");
-            Console.ResetColor(); //resetea el color
-        }
-
-        //aplicar color al titulo
-        private static void MostrarTitulo(string titulo, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine($"─────────────────────────────────────────────────────");
-            Console.WriteLine($"               {titulo}");
-            Console.WriteLine($"─────────────────────────────────────────────────────");
-            Console.ResetColor();
-        }
-        //aplicar color al error
-        public static void MostrarError(string v)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(v);
-            Console.ResetColor();
-            VolverAlMenu();
-        }
-
-        #endregion colores
-
         //vuelve al menu
-        private static void VolverAlMenu()
+        public static void VolverAlMenu()
         {
             //Console.WriteLine("\nPresione cualquier tecla para volver al menú...");
             Console.ReadKey();
@@ -153,18 +125,18 @@ namespace ImageMetadataTools.UI
         }
 
         //valida si un archivo existe y su formato
-        private bool ValidarArchivo(string imagePath)
+        private static bool ValidarArchivo(string imagePath)
         {
             //archivo existe?
             if (!System.IO.File.Exists(imagePath))
             {
-                MostrarError("El archivo no existe. Intente de nuevo.");
+                Style.MostrarError("El archivo no existe. Intente de nuevo.");
             }
 
             string ext = System.IO.Path.GetExtension(imagePath.ToLower());//sacamos la extención
             if (!(ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".bmp" || ext == ".tiff"))
             {
-                MostrarError("Formato no soportado. Use JPG, PNG, BMP o TIFF.");
+                Style.MostrarError("Formato no soportado. Use JPG, PNG, BMP o TIFF.");
                 return false;
             }
             return true;
