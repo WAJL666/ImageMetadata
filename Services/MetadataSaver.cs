@@ -1,5 +1,4 @@
 ﻿using ImageMetadataTools.Models;
-using ImageMetadataTools.UI;
 
 //Guardar información en archivos 
 namespace ImageMetadataTools.Services
@@ -9,13 +8,7 @@ namespace ImageMetadataTools.Services
         public static void GuardarEnArchivo(MetadataInfo metadata)
         {
             // Carpeta donde se guardará (la misma de la imagen)
-            if (metadata == null)
-            {
-                MenuPrincipal ui=new ();
-               ui.MostrarError("No hay metadatos cargados. Primero procese una imagen.");
-                return;
-            }
-            string carpeta = Path.GetDirectoryName(metadata.FullPack) ?? ".";
+            string? carpeta = Path.GetDirectoryName(metadata.FullPack) ?? ".";
             string nombreArchivo = Path.GetFileNameWithoutExtension(metadata.FileName);
             string rutaTxt = Path.Combine(carpeta, nombreArchivo + "_metadatos.txt");
 

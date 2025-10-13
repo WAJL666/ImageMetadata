@@ -3,14 +3,13 @@ using ImageMetadataTools.Services;
 
 namespace ImageMetadataTools.UI
 {
-    internal class MenuPrincipal
+    public class MenuPrincipal
     {
-        private MetadataInfo metadata = null;
+        private MetadataInfo? metadata = null;
 
         public void Inicio()
         {
             #region Menu
-
             int option;
             do
             {
@@ -45,6 +44,11 @@ namespace ImageMetadataTools.UI
         //Opcion 2. guarda metadatos en archivo plano txt
         void GuardarInformacion()
         {
+            if (metadata == null)
+            {
+                MostrarError("No hay metadatos para guardar. Procese una imagen primero.");
+                return;
+            }
             MetadataSaver.GuardarEnArchivo(metadata);
             VolverAlMenu();
         }
@@ -55,23 +59,24 @@ namespace ImageMetadataTools.UI
         {
             string imagePath = PedirRuta();
             if (!ValidarArchivo(imagePath)) return;
-            MetadataReader reader = new(); //instanciamos
+            _ = new MetadataReader(); //instanciamos
             metadata = MetadataReader.GetMetadata(imagePath);//ruta de la imagen y saca información
             if (metadata != null)
             {
                 MostrarLiena();
+                //Información básica
                 MostrarTitulo("Información Basica", ConsoleColor.Cyan);
                 Console.WriteLine("Archivo: " + metadata.FileName);
                 Console.WriteLine("Peso: " + metadata.FileSize);
                 Console.WriteLine("Dimensiones: " + metadata.Width + " x " + metadata.Height);
                 Console.WriteLine("Formato: " + metadata.Format);
                 Console.WriteLine("Orientación: " + metadata.Orientation);
-
+                //Información de la cámara
                 MostrarTitulo("Información de la cámara", ConsoleColor.Magenta);
                 Console.WriteLine("Fabricante de la cámara: " + metadata.CameraMake);
                 Console.WriteLine("Modelo de la cámara: " + metadata.CameraModel);
                 Console.WriteLine("Software que generó la foto: " + metadata.Software);
-
+                //Información de la fotografía
                 MostrarTitulo("Información de la fotografía", ConsoleColor.Blue);
                 Console.WriteLine("Fecha de captura: " + metadata.DateTaken);
                 Console.WriteLine("Fecha digitalización: " + metadata.DateDigitized);
@@ -82,14 +87,14 @@ namespace ImageMetadataTools.UI
                 Console.WriteLine("Programa de exposición: " + metadata.ExposureProgram);
                 Console.WriteLine("Medición de luz: " + metadata.LightSource);
                 Console.WriteLine("Flash usado (sí/no): " + metadata.Flash);
-
+                //Información del lente
                 MostrarTitulo("Información del lente", ConsoleColor.DarkYellow);
                 Console.WriteLine("Fabricante del lente: " + metadata.LensMake);
                 Console.WriteLine("Modelo del lente: " + metadata.LensModel);
                 Console.WriteLine("Balance de blancos: " + metadata.WhiteBalance);
                 Console.WriteLine("LightSource: " + metadata.LightSource);
                 Console.WriteLine("Zoom: " + metadata.DigitalZoomRatio);
-
+                //Información GPS
                 MostrarTitulo("Información del GPS", ConsoleColor.Yellow);
                 Console.WriteLine("Latitud: " + metadata.GPSLatitude);
                 Console.WriteLine("Longitud: " + metadata.GPSLongitude);
@@ -100,15 +105,13 @@ namespace ImageMetadataTools.UI
             {
                 MostrarError("No se pudieron leer los metadatos EXIF");
             }
-
             VolverAlMenu();
         }
-
         #endregion Menu
 
         #region colores
         //Aplicar color a la linea 
-        private void MostrarLiena()
+        private static void MostrarLiena()
         {
             Console.ForegroundColor = ConsoleColor.DarkGray;//aplicar color
             Console.WriteLine("\n──────────────────────────────────────────────────────────────");
@@ -116,7 +119,7 @@ namespace ImageMetadataTools.UI
         }
 
         //aplicar color al titulo
-        private void MostrarTitulo(string titulo, ConsoleColor color)
+        private static void MostrarTitulo(string titulo, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.WriteLine($"─────────────────────────────────────────────────────");
@@ -125,7 +128,7 @@ namespace ImageMetadataTools.UI
             Console.ResetColor();
         }
         //aplicar color al error
-        public void MostrarError(string v)
+        public static void MostrarError(string v)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(v);
@@ -136,17 +139,17 @@ namespace ImageMetadataTools.UI
         #endregion colores
 
         //vuelve al menu
-        private void VolverAlMenu()
+        private static void VolverAlMenu()
         {
             //Console.WriteLine("\nPresione cualquier tecla para volver al menú...");
             Console.ReadKey();
         }
 
         // Leer ruta desde la consola  D:\imagenes\Fotos\Fotos\Emily.JPG
-        private string PedirRuta()
+        private static string PedirRuta()
         {
             Console.Write("\n\nIngrese la ruta completa de la imagen: ");
-           return Console.ReadLine().Trim('"');
+            return Console.ReadLine().Trim('"');
         }
 
         //valida si un archivo existe y su formato
@@ -166,6 +169,5 @@ namespace ImageMetadataTools.UI
             }
             return true;
         }
-
     }
 }
