@@ -15,9 +15,9 @@ namespace ImageMetadataTools.UI
             do
             {
                 Console.WriteLine("\n");
-                Console.WriteLine("╔═══════════════════════════ Lector De Metadatos ════════════════════════╗");
-                Console.WriteLine("║ 1. Procesar imágen. ║ 2. Guardar metadatos en archivo.  ║ 3. Salir.    ║");
-                Console.WriteLine("╚════════════════════════════════════════════════════════════════════════╝");
+                Console.WriteLine("╔═══════════════════════════ Lector De Metadatos ═════════════════════════════════════════════╗");
+                Console.WriteLine("║ 1. Procesar imágen. ║ 2. Guardar metadatos en archivo. ║ 3. Buscar Carpeta.  ║ 4. Salir.    ║");
+                Console.WriteLine("╚═════════════════════════════════════════════════════════════════════════════════════════════╝");
                 Console.Write("\nSeleccione una opción: ");
                 option = Convert.ToInt32(Console.ReadLine());
 
@@ -29,7 +29,10 @@ namespace ImageMetadataTools.UI
                     case 2:
                         GuardarInformacion();
                         break;
-                    case 3:
+                        case 3:
+                        IngresarCarpeta();
+                        break;
+                    case 4:
                         Console.WriteLine("\nGracias por usar el lector de metadatos. ¡Hasta pronto!");
                         Environment.Exit(0);
                         break;
@@ -39,7 +42,13 @@ namespace ImageMetadataTools.UI
                         break;
                 }
 
-            } while (option != 3);
+            } while (option != 4);
+        }
+
+        private void IngresarCarpeta()
+        {
+            string rutaCarpeta=PedirRuta();
+            Manage.ImageManage(rutaCarpeta);
         }
 
         //Opcion 2. guarda metadatos en archivo plano txt
@@ -120,12 +129,12 @@ namespace ImageMetadataTools.UI
         // Leer ruta desde la consola  D:\imagenes\Fotos\Fotos\Emily.JPG
         private static string PedirRuta()
         {
-            Console.Write("\n\nIngrese la ruta completa de la imagen: ");
+            Console.Write("\n\nIngrese la ruta: ");
             return Console.ReadLine().Trim('"');
         }
 
         //valida si un archivo existe y su formato
-        private static bool ValidarArchivo(string imagePath)
+       public static bool ValidarArchivo(string imagePath)
         {
             //archivo existe?
             if (!System.IO.File.Exists(imagePath))
