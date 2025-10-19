@@ -28,7 +28,7 @@ namespace ImageMetadataTools.css
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(v);
             Console.ResetColor();
-            MenuPrincipal.VolverAlMenu();
+           // MenuPrincipal.VolverAlMenu();
         }
         #endregion colores
     }

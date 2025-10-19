@@ -1,8 +1,7 @@
-﻿using ImageMetadataTools.Models;      // Para acceder a MetadataInfo
+﻿using ImageMetadataTools.css;         // Para mostrar mensajes de error  
+using ImageMetadataTools.Models;      // Para acceder a MetadataInfo
 using System.Drawing;                   // Para manejar imágenes
 using System.Drawing.Imaging;
-using ImageMetadataTools.UI;
-using ImageMetadataTools.css;         // Para mostrar mensajes de error  
 
 // lectura de información
 namespace ImageMetadataTools.Services

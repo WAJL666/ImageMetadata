@@ -1,12 +1,10 @@
 ﻿using ImageMetadataTools.css;
-using System.IO;
 namespace ImageMetadataTools.Services
 {
     internal class Manage
     {
         public static void ImageManage(string rutaCarpeta)
         {
-            
             //Verificar si la carpeta existe (Directory.Exists).Si no existe → mostrar un mensaje de error y salir.
             if (!Directory.Exists(rutaCarpeta))
             {
@@ -37,11 +35,9 @@ namespace ImageMetadataTools.Services
                 if ((i + 1) % 5 == 0) //Cada 5 nombres, hacer un salto de línea.
                 {
                     Console.WriteLine();
-                }   
+                }
             }
-
             //Mostrar al final el total de imágenes encontradas.
-
         }
     }
 }

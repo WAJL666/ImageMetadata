@@ -7,7 +7,6 @@ namespace ImageMetadataTools.UI
     public class MenuPrincipal
     {
         private MetadataInfo? metadata = null;
-
         public void Inicio()
         {
             #region Menu
@@ -29,7 +28,7 @@ namespace ImageMetadataTools.UI
                     case 2:
                         GuardarInformacion();
                         break;
-                        case 3:
+                    case 3:
                         IngresarCarpeta();
                         break;
                     case 4:
@@ -45,9 +44,9 @@ namespace ImageMetadataTools.UI
             } while (option != 4);
         }
 
-        private void IngresarCarpeta()
+        private static void IngresarCarpeta()
         {
-            string rutaCarpeta=PedirRuta();
+            string rutaCarpeta = PedirRuta();
             Manage.ImageManage(rutaCarpeta);
         }
 
@@ -70,7 +69,7 @@ namespace ImageMetadataTools.UI
             string imagePath = PedirRuta();
             if (!ValidarArchivo(imagePath)) return;
             _ = new MetadataReader(); //instanciamos
-            metadata = MetadataReader.GetMetadata(imagePath);//ruta de la imagen y saca información
+            metadata = MetadataReader.GetMetadata(imagePath); //ruta de la imagen y saca información
             if (metadata != null)
             {
                 Style.MostrarLiena();
