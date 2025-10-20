@@ -1,4 +1,5 @@
 ﻿using ImageMetadataTools.Models;
+using System.Text;
 
 //Guardar información en archivos 
 namespace ImageMetadataTools.Services
@@ -7,11 +8,7 @@ namespace ImageMetadataTools.Services
     {
         public static void GuardarEnArchivo(MetadataInfo metadata)
         {
-            // Carpeta donde se guardará (la misma de la imagen)
-            string? carpeta = Path.GetDirectoryName(metadata.FullPack) ?? ".";
-            string nombreArchivo = Path.GetFileNameWithoutExtension(metadata.FileName);
-            string rutaTxt = Path.Combine(carpeta, nombreArchivo + "_metadatos.txt");
-
+            string rutaTxt = ObtenerRutaDestino(metadata);
             File.WriteAllText(rutaTxt, GenerarTexto(metadata));
 
             Console.WriteLine($" Metadatos guardados en: {rutaTxt}");
@@ -20,28 +17,40 @@ namespace ImageMetadataTools.Services
         //saca los metadatos para retornar la información para guadarlo en texto
         private static string? GenerarTexto(MetadataInfo meta)
         {
-            return
-                 $"Archivo: {meta.FileName}\n" +
-                 $"Peso: {meta.FileSize}\n" +
-                 $"Dimensiones: {meta.Width}x{meta.Height}\n" +
-                 $"Formato: {meta.Format}\n" +
-                 $"Orientación: {meta.Orientation}\n" +
-                 $"Cámara: {meta.CameraMake} {meta.CameraModel}\n" +
-                 $"Software: {meta.Software}\n" +
-                 $"Fecha captura: {meta.DateTaken}\n" +
-                 $"Fecha digitalización: {meta.DateDigitized}\n" +
-                 $"Exposición: {meta.ExposureTime}\n" +
-                 $"Apertura: {meta.Aperture}\n" +
-                 $"ISO: {meta.ISO}\n" +
-                 $"Distancia focal: {meta.FocalLength}\n" +
-                 $"Programa de exposición: {meta.ExposureProgram}\n" +
-                 $"Medición de luz: {meta.MeteringMode}\n" +
-                 $"Flash: {meta.Flash}\n" +
-                 $"Lente: {meta.LensMake} {meta.LensModel}\n" +
-                 $"Balance blancos: {meta.WhiteBalance}\n" +
-                 $"Fuente de luz: {meta.LightSource}\n" +
-                 $"Zoom digital: {meta.DigitalZoomRatio}\n" +
-                 $"GPS: {meta.GPSLatitude}, {meta.GPSLongitude}, Altitud: {meta.GPSAltitude}";
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"Archivo: {meta.FileName}");
+            sb.AppendLine($"Peso: {meta.FileSize}");
+            sb.AppendLine($"Dimensiones: {meta.Width}x{meta.Height}");
+            sb.AppendLine($"Formato: {meta.Format}");
+            sb.AppendLine($"Orientación: {meta.Orientation}");
+            sb.AppendLine($"Cámara: {meta.CameraMake} {meta.CameraModel}");
+            sb.AppendLine($"Software: {meta.Software}");
+            sb.AppendLine($"Fecha captura: {meta.DateTaken}");
+            sb.AppendLine($"Fecha digitalización: {meta.DateDigitized}");
+            sb.AppendLine($"Exposición: {meta.ExposureTime}");
+            sb.AppendLine($"Apertura: {meta.Aperture}");
+            sb.AppendLine($"ISO: {meta.ISO}");
+            sb.AppendLine($"Distancia focal: {meta.FocalLength}");
+            sb.AppendLine($"Programa de exposición: {meta.ExposureProgram}");
+            sb.AppendLine($"Medición de luz: {meta.MeteringMode}");
+            sb.AppendLine($"Flash: {meta.Flash}");
+            sb.AppendLine($"Lente: {meta.LensMake} {meta.LensModel}");
+            sb.AppendLine($"Balance blancos: {meta.WhiteBalance}");
+            sb.AppendLine($"Fuente de luz: {meta.LightSource}");
+            sb.AppendLine($"Zoom digital: {meta.DigitalZoomRatio}");
+            sb.AppendLine($"GPS: {meta.GPSLatitude}, {meta.GPSLongitude}, Altitud: {meta.GPSAltitude}");
+
+            return sb.ToString();
         }
+
+        //Obtener la ruta destino para el archivo de metadatos
+        private static string ObtenerRutaDestino(MetadataInfo metadata)
+        {
+            string carpeta = Path.GetDirectoryName(metadata.FullPack) ?? ".";
+            string nombreArchivo = Path.GetFileNameWithoutExtension(metadata.FileName);
+            return Path.Combine(carpeta, $"{nombreArchivo}_metadatos.txt");
+        }
+
     }
 }
