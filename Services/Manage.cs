@@ -7,7 +7,7 @@ namespace ImageMetadataTools.Services
         {
             string[] archivos = Directory.GetFiles(rutaCarpeta, "*.*", SearchOption.TopDirectoryOnly); // 2, 3 
             string[] carpetas = Directory.GetDirectories(rutaCarpeta, "*", SearchOption.TopDirectoryOnly);  // 4            
-            string[] extensionesValidas = { ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".gif" }; // 5
+            string[] extensionesValidas = [".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".gif"]; // 5
             List<string> imagenesValidas = [];
 
             foreach (string carpeta in carpetas)
