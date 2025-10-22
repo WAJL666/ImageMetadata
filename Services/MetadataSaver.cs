@@ -51,6 +51,5 @@ namespace ImageMetadataTools.Services
             string nombreArchivo = Path.GetFileNameWithoutExtension(metadata.FileName);
             return Path.Combine(carpeta, $"{nombreArchivo}_metadatos.txt");
         }
-
     }
 }
