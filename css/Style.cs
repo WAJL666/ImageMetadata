@@ -9,7 +9,7 @@ namespace ImageMetadataTools.css
         public static void MostrarLiena()
         {
             Console.ForegroundColor = ConsoleColor.DarkGray;//aplicar color
-            Console.WriteLine("\n──────────────────────────────────────────────────────────────");
+            Console.WriteLine("──────────────────────────────────────────────────────────────");
             Console.ResetColor(); //resetea el color
         }
 
@@ -17,18 +17,18 @@ namespace ImageMetadataTools.css
         public static void MostrarTitulo(string titulo, ConsoleColor color)
         {
             Console.ForegroundColor = color;
+            Console.WriteLine();
             Console.WriteLine($"─────────────────────────────────────────────────────");
             Console.WriteLine($"               {titulo}");
             Console.WriteLine($"─────────────────────────────────────────────────────");
             Console.ResetColor();
         }
         //aplicar color al error
-        public static void MostrarError(string v)
+        public static void MostrarError(string cometario)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(v);
+            Console.WriteLine(cometario);
             Console.ResetColor();
-           // MenuPrincipal.VolverAlMenu();
         }
         #endregion colores
     }
