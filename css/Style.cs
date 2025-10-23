@@ -1,6 +1,4 @@
-﻿using ImageMetadataTools.UI;
-
-namespace ImageMetadataTools.css
+﻿namespace ImageMetadataTools.css
 {
     public class Style
     {

@@ -6,6 +6,7 @@ namespace ImageMetadataTools.Services
 {
     public class MetadataSaver
     {
+        //Guarda los metadatos en un archivo de texto
         public static void GuardarEnArchivo(MetadataInfo metadata)
         {
             string rutaTxt = ObtenerRutaDestino(metadata);

@@ -70,11 +70,13 @@ namespace ImageMetadataTools.Services
     }
 }
 
-/* 0. Llamada recursiva para procesar subcarpetas
-   1. Verificar si la carpeta existe (Directory.Exists).Si no existe → mostrar un mensaje de error y salir.
+/*  
+    0. Llamada recursiva para procesar subcarpetas
+    1. Verificar si la carpeta existe (Directory.Exists).Si no existe → mostrar un mensaje de error y salir.
     3. Obtener todos los archivos de la carpeta (Directory.GetFiles).
     4. Obtener todas las carpetas (Directory.GetDirectories).
     5. Usa un filtro por extensiones válidas (por ejemplo .jpg, .png, .bmp, .tiff). 
     6. Mostrar en consola los nombres de los archivos. puedes usar Path.GetFileName(rutaArchivo) para mostrar solo el nombre, no toda la ruta).
     7. {nombre,-25} deja cada nombre ocupando 25 caracteres de ancho, alineado a la izquierda.muestra solo el nombre del archivo.
-    8. Cada 5 nombres, hacer un salto de línea.*/
+    8. Cada 5 nombres, hacer un salto de línea.
+*/
