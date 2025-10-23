@@ -5,59 +5,73 @@ namespace ImageMetadataTools.Services
     {
         public static void ImageManage(string rutaCarpeta)
         {
-            string[] archivos = Directory.GetFiles(rutaCarpeta, "*.*", SearchOption.TopDirectoryOnly); // 2, 3 
-            string[] carpetas = Directory.GetDirectories(rutaCarpeta, "*", SearchOption.TopDirectoryOnly);  // 4            
-            string[] extensionesValidas = [".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".gif"]; // 5
-            List<string> imagenesValidas = [];
+            if (!ValidarCarpeta(rutaCarpeta)) return; 
 
-            foreach (string carpeta in carpetas)
+            List<string> imagenes = ObtenerImagenesValidas(rutaCarpeta);
+            MostrarResumen(rutaCarpeta, imagenes);
+            MostrarNombres(imagenes);
+
+            foreach (string subcarpeta in Directory.GetDirectories(rutaCarpeta))
             {
-                ImageManage(carpeta); // 0
+                ImageManage(subcarpeta); // 0
             }
-            if (!Directory.Exists(rutaCarpeta))// 1
+        }
+
+        private static bool ValidarCarpeta(string ruta)
+        {
+            if (!Directory.Exists(ruta)) // 1
             {
                 Style.MostrarError("La carpeta no existe. Intente de nuevo.");
-                return;
-            }                  
-            
-            foreach (string archivo in archivos)
+                return false;
+            }
+            return true;
+        }
+
+        private static List<string> ObtenerImagenesValidas(string ruta)
+        {
+            string[] extensionesValidas = [".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".gif"]; // 5
+            List<string> imagenes = [];
+
+            foreach (string archivo in Directory.GetFiles(ruta))
             {
-                string extension = Path.GetExtension(archivo).ToLower();
-                foreach (string extValida in extensionesValidas)
+                string extension = Path.GetExtension(archivo).ToLowerInvariant(); // 3, 4
+                if (extensionesValidas.Contains(extension))
                 {
-                    if (extension == extValida)
-                    {
-                        imagenesValidas.Add(archivo);
-                        break; 
-                    }
+                    imagenes.Add(archivo);
                 }
-            }            
-            Style.MostrarTitulo(rutaCarpeta, ConsoleColor.Green);// 6     
-            Console.WriteLine($"Imágenes econtradas: {imagenesValidas.Count}");
+            }
+
+            return imagenes;
+        }
+
+        private static void MostrarResumen(string ruta, List<string> imagenes)
+        {
+            Style.MostrarTitulo(ruta, ConsoleColor.Green);  // 6
+            Console.WriteLine($"Imágenes encontradas: {imagenes.Count}");
             Style.MostrarLiena();
-            if (imagenesValidas.Count == 0)
+
+            if (imagenes.Count == 0)
             {
                 Style.MostrarError("No se encontraron imágenes en la carpeta.");
                 Style.MostrarLiena();
-                return;
             }
-            for (int i = 0; i < imagenesValidas.Count; i++)
-            {                
-                Console.Write($"{Path.GetFileName(imagenesValidas[i]),-25}");// 7 
-                if ((i + 1) % 5 == 0) // 8 
-                {
+        }
+
+        private static void MostrarNombres(List<string> imagenes)
+        {
+            for (int i = 0; i < imagenes.Count; i++)
+            {
+                Console.Write($"{Path.GetFileName(imagenes[i]),-25}"); //7
+                if ((i + 1) % 5 == 0)  //8
                     Console.WriteLine();
-                }
             }
-            
+            Console.WriteLine(); // Salto final
         }
     }
 }
+
 /* 0. Llamada recursiva para procesar subcarpetas
    1. Verificar si la carpeta existe (Directory.Exists).Si no existe → mostrar un mensaje de error y salir.
-   2.  "*"=cualquier nombre, ".*"=cualquier extensión, "."= en conjunto.    
-             SearchOption.TopDirectoryOnly=solo en la carpeta indicada, no en subcarpetas.
-             SearchOption.AllDirectories=incluye subcarpetas.
     3. Obtener todos los archivos de la carpeta (Directory.GetFiles).
     4. Obtener todas las carpetas (Directory.GetDirectories).
     5. Usa un filtro por extensiones válidas (por ejemplo .jpg, .png, .bmp, .tiff). 
