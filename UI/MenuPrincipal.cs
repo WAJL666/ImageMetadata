@@ -7,29 +7,27 @@ namespace ImageMetadataTools.UI
     public class MenuPrincipal
     {
         private MetadataInfo? metadata = null;
+
         public void Inicio()
         {
-            #region Menu
             int option;
             do
             {
-                Console.WriteLine("\n");
-                Console.WriteLine("╔═══════════════════════════ Lector De Metadatos ═════════════════════════════════════════════╗");
-                Console.WriteLine("║ 1. Procesar imágen. ║ 2. Guardar metadatos en archivo. ║ 3. Buscar Carpeta.  ║ 4. Salir.    ║");
-                Console.WriteLine("╚═════════════════════════════════════════════════════════════════════════════════════════════╝");
-                Console.Write("\nSeleccione una opción: ");
-                option = Convert.ToInt32(Console.ReadLine());
+                MostrarMenu();
+
+                if (!int.TryParse(Console.ReadLine(), out option))
+                {
+                    Console.WriteLine("❌ Entrada inválida. Debe ser un número.");
+                    continue;
+                }
 
                 switch (option)
                 {
-                    case 1:
-                        ProcesarImagenExif();
+                    case 1: ProcesarImagenExif(); 
                         break;
-                    case 2:
-                        GuardarInformacion();
+                    case 2: GuardarInformacion(); 
                         break;
-                    case 3:
-                        IngresarCarpeta();
+                    case 3: IngresarCarpeta(); 
                         break;
                     case 4:
                         Console.WriteLine("\nGracias por usar el lector de metadatos. ¡Hasta pronto!");
@@ -44,6 +42,17 @@ namespace ImageMetadataTools.UI
             } while (option != 4);
         }
 
+        //muestra el menu
+        private static void MostrarMenu()
+        {
+            Console.WriteLine("\n");
+            Console.WriteLine("╔═════════════════════════════════════ Lector De Metadatos ═══════════════════════════════════╗");
+            Console.WriteLine("║ 1. Procesar imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Buscar Carpeta. ║ 4. Salir.     ║");
+            Console.WriteLine("╚═════════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.Write("\nSeleccione una opción: ");
+        }
+
+        //Opcion 3, ingresa carpeta
         private static void IngresarCarpeta()
         {
             string rutaCarpeta = PedirRuta();
@@ -51,7 +60,7 @@ namespace ImageMetadataTools.UI
         }
 
         //Opcion 2. guarda metadatos en archivo plano txt
-        void GuardarInformacion()
+        private void GuardarInformacion()
         {
             if (metadata == null)
             {
@@ -62,70 +71,74 @@ namespace ImageMetadataTools.UI
             VolverAlMenu();
         }
 
-
         //Opcion 1, muestra los metadatos
-        void ProcesarImagenExif()
+        private void ProcesarImagenExif()
         {
             string imagePath = PedirRuta();
             if (!ValidarArchivo(imagePath)) return;
-            _ = new MetadataReader(); //instanciamos
-            metadata = MetadataReader.GetMetadata(imagePath); //ruta de la imagen y saca información
+
+            metadata = MetadataReader.GetMetadata(imagePath);
             if (metadata != null)
             {
-                Style.MostrarLiena();
-                //Información básica
-                Style.MostrarTitulo("Información Basica", ConsoleColor.Cyan);
-                Console.WriteLine("Archivo: " + metadata.FileName);
-                Console.WriteLine("Peso: " + metadata.FileSize);
-                Console.WriteLine("Dimensiones: " + metadata.Width + " x " + metadata.Height);
-                Console.WriteLine("Formato: " + metadata.Format);
-                Console.WriteLine("Orientación: " + metadata.Orientation);
-                //Información de la cámara
-                Style.MostrarTitulo("Información de la cámara", ConsoleColor.Magenta);
-                Console.WriteLine("Fabricante de la cámara: " + metadata.CameraMake);
-                Console.WriteLine("Modelo de la cámara: " + metadata.CameraModel);
-                Console.WriteLine("Software que generó la foto: " + metadata.Software);
-                //Información de la fotografía
-                Style.MostrarTitulo("Información de la fotografía", ConsoleColor.Blue);
-                Console.WriteLine("Fecha de captura: " + metadata.DateTaken);
-                Console.WriteLine("Fecha digitalización: " + metadata.DateDigitized);
-                Console.WriteLine("Tiempo de exposición: " + metadata.ExposureTime);
-                Console.WriteLine("Apertura: " + metadata.Aperture);
-                Console.WriteLine("Iso: " + metadata.ISO);
-                Console.WriteLine("Distancia focal: " + metadata.FocalLength);
-                Console.WriteLine("Programa de exposición: " + metadata.ExposureProgram);
-                Console.WriteLine("Medición de luz: " + metadata.LightSource);
-                Console.WriteLine("Flash usado (sí/no): " + metadata.Flash);
-                //Información del lente
-                Style.MostrarTitulo("Información del lente", ConsoleColor.DarkYellow);
-                Console.WriteLine("Fabricante del lente: " + metadata.LensMake);
-                Console.WriteLine("Modelo del lente: " + metadata.LensModel);
-                Console.WriteLine("Balance de blancos: " + metadata.WhiteBalance);
-                Console.WriteLine("LightSource: " + metadata.LightSource);
-                Console.WriteLine("Zoom: " + metadata.DigitalZoomRatio);
-                //Información GPS
-                Style.MostrarTitulo("Información del GPS", ConsoleColor.Yellow);
-                Console.WriteLine("Latitud: " + metadata.GPSLatitude);
-                Console.WriteLine("Longitud: " + metadata.GPSLongitude);
-                Console.WriteLine("Altitud: " + metadata.GPSAltitude);
-                Style.MostrarLiena();
+                MostrarMetadatos(metadata);
             }
             else
             {
-                Style.MostrarError("No se pudieron leer los metadatos EXIF");
+                Style.MostrarError("No se pudieron leer los metadatos EXIF.");
             }
+
             VolverAlMenu();
         }
-        #endregion Menu
+
+        //muestra los metadatos en consola
+        private static void MostrarMetadatos(MetadataInfo metadata)
+        {
+            Style.MostrarLiena();
+            Style.MostrarTitulo("Información Básica", ConsoleColor.Cyan);
+            //Información básica
+            Console.WriteLine($"Archivo: {metadata.FileName}");
+            Console.WriteLine($"Peso: {metadata.FileSize}");
+            Console.WriteLine($"Dimensiones: {metadata.Width} x {metadata.Height}");
+            Console.WriteLine($"Formato: {metadata.Format}");
+            Console.WriteLine($"Orientación: {metadata.Orientation}");
+            //Información de la cámara
+            Style.MostrarTitulo("Información de la Cámara", ConsoleColor.Magenta);
+            Console.WriteLine($"Fabricante: {metadata.CameraMake}");
+            Console.WriteLine($"Modelo: {metadata.CameraModel}");
+            Console.WriteLine($"Software: {metadata.Software}");
+            //Información de la fotografía
+            Style.MostrarTitulo("Fotografía", ConsoleColor.Blue);
+            Console.WriteLine($"Fecha de captura: {metadata.DateTaken}");
+            Console.WriteLine($"Fecha digitalización: {metadata.DateDigitized}");
+            Console.WriteLine($"Exposición: {metadata.ExposureTime}");
+            Console.WriteLine($"Apertura: {metadata.Aperture}");
+            Console.WriteLine($"ISO: {metadata.ISO}");
+            Console.WriteLine($"Focal: {metadata.FocalLength}");
+            Console.WriteLine($"Programa: {metadata.ExposureProgram}");
+            Console.WriteLine($"Medición: {metadata.MeteringMode}");
+            Console.WriteLine($"Flash: {metadata.Flash}");
+            //Información del lente
+            Style.MostrarTitulo("Lente", ConsoleColor.DarkYellow);
+            Console.WriteLine($"Fabricante: {metadata.LensMake}");
+            Console.WriteLine($"Modelo: {metadata.LensModel}");
+            Console.WriteLine($"Balance blancos: {metadata.WhiteBalance}");
+            Console.WriteLine($"Fuente de luz: {metadata.LightSource}");
+            Console.WriteLine($"Zoom digital: {metadata.DigitalZoomRatio}");
+            //Información GPS
+            Style.MostrarTitulo("GPS", ConsoleColor.Yellow);
+            Console.WriteLine($"Latitud: {metadata.GPSLatitude}");
+            Console.WriteLine($"Longitud: {metadata.GPSLongitude}");
+            Console.WriteLine($"Altitud: {metadata.GPSAltitude}");
+            Style.MostrarLiena();
+        }
 
         //vuelve al menu
         public static void VolverAlMenu()
         {
-            //Console.WriteLine("\nPresione cualquier tecla para volver al menú...");
+            Console.WriteLine("\nPresione cualquier tecla para volver al menú...");
             Console.ReadKey();
         }
 
-        // Leer ruta desde la consola  D:\imagenes\Fotos\Fotos\Emily.JPG
         private static string PedirRuta()
         {
             Console.Write("\n\nIngrese la ruta: ");
@@ -133,16 +146,18 @@ namespace ImageMetadataTools.UI
         }
 
         //valida si un archivo existe y su formato
-       public static bool ValidarArchivo(string imagePath)
+        public static bool ValidarArchivo(string imagePath)
         {
-            //archivo existe?
-            if (!System.IO.File.Exists(imagePath))
+            if (!File.Exists(imagePath))
             {
                 Style.MostrarError("El archivo no existe. Intente de nuevo.");
+                return false;
             }
 
-            string ext = System.IO.Path.GetExtension(imagePath.ToLower());//sacamos la extención
-            if (!(ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".bmp" || ext == ".tiff"))
+            string ext = Path.GetExtension(imagePath).ToLowerInvariant();
+            string[] extensionesValidas = [".jpg", ".jpeg", ".png", ".bmp", ".tiff"];
+
+            if (!extensionesValidas.Contains(ext))
             {
                 Style.MostrarError("Formato no soportado. Use JPG, PNG, BMP o TIFF.");
                 return false;
