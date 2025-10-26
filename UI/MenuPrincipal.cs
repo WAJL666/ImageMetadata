@@ -30,6 +30,23 @@ namespace ImageMetadataTools.UI
                     case 3: IngresarCarpeta(); 
                         break;
                     case 4:
+                        int subopcion = MostarMenuAgrupar();
+                        switch (subopcion)
+                        {
+                            case 1:
+                                Console.WriteLine("\nOpcion 1");
+                                //AgruparPorFecha(imagenes, rutaDestino);
+                                break;
+                            case 2:
+                                Console.WriteLine("\nOpcion 2");
+                                //AgruparPorLugar(imagenes, rutaDestino);
+                                break;
+                            default:
+                                Console.WriteLine("❌ Opción no válida en el submenú.");
+                                break;
+                        }
+                        break;
+                    case 5:
                         Console.WriteLine("\nGracias por usar el lector de metadatos. ¡Hasta pronto!");
                         Environment.Exit(0);
                         break;
@@ -39,17 +56,47 @@ namespace ImageMetadataTools.UI
                         break;
                 }
 
-            } while (option != 4);
+            } while (option != 5);
         }
 
         //muestra el menu
         private static void MostrarMenu()
         {
-            Console.WriteLine("\n");
-            Console.WriteLine("╔═════════════════════════════════════ Lector De Metadatos ═══════════════════════════════════╗");
-            Console.WriteLine("║ 1. Procesar imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Buscar Carpeta. ║ 4. Salir.     ║");
-            Console.WriteLine("╚═════════════════════════════════════════════════════════════════════════════════════════════╝");
+            //Console.Clear();
+            int ancho = Console.WindowWidth;
+
+            Console.WriteLine("\n╔═════════════════════════════════════════════ Lector De Metadatos ═════════════════════════════════════════════════╗");
+
+            if (ancho >= 120)
+            {
+                Console.WriteLine("║ 1. Procesar imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Buscar Carpeta. ║ 4. Agrupar imágenes. ║ 5. Salir.    ║");
+            }
+            else
+            {
+                Console.WriteLine("║ 1. Procesar imagen.              ║");
+                Console.WriteLine("║ 2. Guardar metadatos en archivo. ║");
+                Console.WriteLine("║ 3. Buscar Carpeta.               ║");
+                Console.WriteLine("║ 4. Agrupar imágenes.             ║");
+                Console.WriteLine("║ 5. Salir.                        ║");
+            }
+
+            Console.WriteLine("╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
             Console.Write("\nSeleccione una opción: ");
+        }
+
+        private static int MostarMenuAgrupar()
+        {
+            //Console.Clear();
+            Console.WriteLine("\n╔═════════════════════════════════════ Agrupar Imágenes ═══════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║ 1. Agrupar por fecha.                                                                                           ║");
+            Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                  ║");
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.Write("\nSeleccione una opción: ");
+
+            if (int.TryParse(Console.ReadLine(), out int subopcion))
+                return subopcion;
+
+            return -1; // opción inválida
         }
 
         //Opcion 3, ingresa carpeta
