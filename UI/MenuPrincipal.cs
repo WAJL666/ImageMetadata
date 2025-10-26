@@ -7,17 +7,18 @@ namespace ImageMetadataTools.UI
     public class MenuPrincipal
     {
         private MetadataInfo? metadata = null;
+        public static string rutaDestino = string.Empty;
 
         public void Inicio()
         {
             int option;
             do
             {
-                MostrarMenu();
+               Style.MostrarMenu();
 
                 if (!int.TryParse(Console.ReadLine(), out option))
                 {
-                    Console.WriteLine("❌ Entrada inválida. Debe ser un número.");
+                    Style.MostrarError("Entrada inválida. Debe ser un número.");
                     continue;
                 }
 
@@ -30,7 +31,7 @@ namespace ImageMetadataTools.UI
                     case 3: IngresarCarpeta(); 
                         break;
                     case 4:
-                        int subopcion = MostarMenuAgrupar();
+                        int subopcion = Style.MostarMenuAgrupar();
                         switch (subopcion)
                         {
                             case 1:
@@ -42,16 +43,16 @@ namespace ImageMetadataTools.UI
                                 //AgruparPorLugar(imagenes, rutaDestino);
                                 break;
                             default:
-                                Console.WriteLine("❌ Opción no válida en el submenú.");
+                                Style.MostrarError("Opción no válida en el submenú.");
                                 break;
                         }
                         break;
                     case 5:
-                        Console.WriteLine("\nGracias por usar el lector de metadatos. ¡Hasta pronto!");
+                        Style.MostrarComentarios("\nGracias por usar el lector de metadatos. ¡Hasta pronto!", ConsoleColor.Green);
                         Environment.Exit(0);
                         break;
                     default:
-                        Console.WriteLine("❌ Opción inválida. Intente de nuevo.");
+                        Style.MostrarError("Opción inválida. Intente de nuevo.");
                         Console.ReadKey();
                         break;
                 }
@@ -59,51 +60,11 @@ namespace ImageMetadataTools.UI
             } while (option != 5);
         }
 
-        //muestra el menu
-        private static void MostrarMenu()
-        {
-            //Console.Clear();
-            int ancho = Console.WindowWidth;
-
-            Console.WriteLine("\n╔═════════════════════════════════════════════ Lector De Metadatos ═════════════════════════════════════════════════╗");
-
-            if (ancho >= 120)
-            {
-                Console.WriteLine("║ 1. Procesar imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Buscar Carpeta. ║ 4. Agrupar imágenes. ║ 5. Salir.    ║");
-            }
-            else
-            {
-                Console.WriteLine("║ 1. Procesar imagen.              ║");
-                Console.WriteLine("║ 2. Guardar metadatos en archivo. ║");
-                Console.WriteLine("║ 3. Buscar Carpeta.               ║");
-                Console.WriteLine("║ 4. Agrupar imágenes.             ║");
-                Console.WriteLine("║ 5. Salir.                        ║");
-            }
-
-            Console.WriteLine("╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.Write("\nSeleccione una opción: ");
-        }
-
-        private static int MostarMenuAgrupar()
-        {
-            //Console.Clear();
-            Console.WriteLine("\n╔═════════════════════════════════════ Agrupar Imágenes ═══════════════════════════════════════════════════════════╗");
-            Console.WriteLine("║ 1. Agrupar por fecha.                                                                                           ║");
-            Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                  ║");
-            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.Write("\nSeleccione una opción: ");
-
-            if (int.TryParse(Console.ReadLine(), out int subopcion))
-                return subopcion;
-
-            return -1; // opción inválida
-        }
-
         //Opcion 3, ingresa carpeta
         private static void IngresarCarpeta()
         {
-            string rutaCarpeta = PedirRuta();
-            Manage.ImageManage(rutaCarpeta);
+           rutaDestino = PedirRuta();            
+            Manage.ImageManage(rutaDestino);
         }
 
         //Opcion 2. guarda metadatos en archivo plano txt
@@ -121,10 +82,10 @@ namespace ImageMetadataTools.UI
         //Opcion 1, muestra los metadatos
         private void ProcesarImagenExif()
         {
-            string imagePath = PedirRuta();
-            if (!ValidarArchivo(imagePath)) return;
+            rutaDestino = PedirRuta();
+            if (!ValidarArchivo(rutaDestino)) return;
 
-            metadata = MetadataReader.GetMetadata(imagePath);
+            metadata = MetadataReader.GetMetadata(rutaDestino);
             if (metadata != null)
             {
                 MostrarMetadatos(metadata);
@@ -140,7 +101,8 @@ namespace ImageMetadataTools.UI
         //muestra los metadatos en consola
         private static void MostrarMetadatos(MetadataInfo metadata)
         {
-            Style.MostrarLiena();
+            Console.ResetColor();
+            Style.MostrarLiena(ConsoleColor.DarkGray);
             Style.MostrarTitulo("Información Básica", ConsoleColor.Cyan);
             //Información básica
             Console.WriteLine($"Archivo: {metadata.FileName}");
@@ -176,7 +138,7 @@ namespace ImageMetadataTools.UI
             Console.WriteLine($"Latitud: {metadata.GPSLatitude}");
             Console.WriteLine($"Longitud: {metadata.GPSLongitude}");
             Console.WriteLine($"Altitud: {metadata.GPSAltitude}");
-            Style.MostrarLiena();
+            Style.MostrarLiena(ConsoleColor.DarkGray);
         }
 
         //vuelve al menu
@@ -189,15 +151,18 @@ namespace ImageMetadataTools.UI
         private static string PedirRuta()
         {
             Console.Write("\n\nIngrese la ruta: ");
+            
             return Console.ReadLine().Trim('"');
         }
 
         //valida si un archivo existe y su formato
+        //valida si un archivo existe y su formato
         public static bool ValidarArchivo(string imagePath)
         {
+            int msm = 0;
             if (!File.Exists(imagePath))
             {
-                Style.MostrarError("El archivo no existe. Intente de nuevo.");
+                msm = 1;
                 return false;
             }
 
@@ -206,10 +171,20 @@ namespace ImageMetadataTools.UI
 
             if (!extensionesValidas.Contains(ext))
             {
-                Style.MostrarError("Formato no soportado. Use JPG, PNG, BMP o TIFF.");
+                msm = 2;
                 return false;
+            }
+            if (msm == 1)
+            {
+                Style.MostrarError("El archivo no existe. Intente de nuevo.");
+
+            }
+            else if (msm == 2)
+            {
+                Style.MostrarError("Formato no soportado. Use JPG, PNG, BMP o TIFF.");
             }
             return true;
         }
+
     }
 }
