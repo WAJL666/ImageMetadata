@@ -59,10 +59,25 @@ namespace ImageMetadataTools.Services
 
         private static void MostrarNombres(List<string> imagenes)
         {
+            int anchoMaximo = imagenes
+                .Select(img => Path.GetFileName(img).Length)
+                .Max();
+
+            // Añadir margen para separación visual
+            int anchoColumna = anchoMaximo + 2;
+
+            // Obtener el ancho de la consola
+            int anchoConsola = Console.WindowWidth;
+
+            // Calcular cuántas columnas caben
+            int columnas = Math.Max(1, anchoConsola / anchoColumna);
+
             for (int i = 0; i < imagenes.Count; i++)
             {
-                Console.Write($"{Path.GetFileName(imagenes[i]),-25}"); //7
-                if ((i + 1) % 5 == 0)  //8
+                string nombre = Path.GetFileName(imagenes[i]);
+                Console.Write(string.Format("{0,-" + anchoColumna + "}", nombre));
+
+                if ((i + 1) % columnas == 0)
                     Console.WriteLine();
             }
             Console.WriteLine(); // Salto final
