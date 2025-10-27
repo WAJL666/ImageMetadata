@@ -1,22 +1,81 @@
 ﻿using ImageMetadataTools.css;
+using ImageMetadataTools.UI;
 namespace ImageMetadataTools.Services
 {
     internal class Manage
     {
+        public static Stack<string> CarpetaAtras = new Stack<string>();// pila para navegar atras
+        public static Stack<string> CarpetaSiguiente = new Stack<string>();// pila para navegar atras
+        
         public static void ImageManage(string rutaCarpeta)
         {
-            if (!ValidarCarpeta(rutaCarpeta)) return; 
+            if (!ValidarCarpeta(rutaCarpeta)) return;
+            CarpetaAtras.Push(rutaCarpeta); // carpeta inicial
 
             List<string> imagenes = ObtenerImagenesValidas(rutaCarpeta);
             MostrarImagenesEncontradas(rutaCarpeta, imagenes);
-            MostrarNombres(imagenes);
+            MostrarNombres(imagenes, ConsoleColor.Green);
 
             List<string> carpetas = ObtenerCarpetas(rutaCarpeta);
-            MostrarNombres(carpetas);
-            //foreach (string subcarpeta in Directory.GetDirectories(rutaCarpeta))
-            //{
-            //    ImageManage(subcarpeta); // 0
-            //}
+            MostrarNombres(carpetas, ConsoleColor.Magenta);
+
+            NavegarCarpetas(rutaCarpeta);
+        }
+
+        public static void NavegarCarpetas(string rutaCarpeta)
+        {            
+         
+            int opcionNavegar = Style.MostarMenuNavegar();
+            if (opcionNavegar == 1)
+            {
+                Style.MostrarComentarios("\nIngrese nombre de la carpeta:", ConsoleColor.Cyan);
+                string nombreCarpeta = Console.ReadLine().Trim();
+                string nuevaRuta = Path.Combine(rutaCarpeta, nombreCarpeta);
+
+                if (!ValidarCarpeta(nuevaRuta))
+                {
+                    NavegarCarpetas(rutaCarpeta);
+                    return;
+                }
+
+                // Guardar la carpeta actual antes de entrar
+                CarpetaAtras.Push(rutaCarpeta);
+                CarpetaSiguiente.Clear();
+
+                ImageManage(nuevaRuta); // ir a la nueva carpeta
+                return;
+            }else if (opcionNavegar==2)
+            {
+                if (CarpetaAtras.Count > 0)
+                {
+                    string rutaAnterior = CarpetaAtras.Pop();
+                    CarpetaSiguiente.Push(rutaCarpeta); // Guardar la carpeta actual para "Siguiente"
+                    ImageManage(rutaAnterior);
+                }
+                else
+                {
+                    Style.MostrarError("No hay carpeta anterior.");
+                    NavegarCarpetas(rutaCarpeta);
+                }
+            }else if (opcionNavegar==3)
+            {
+                if (CarpetaSiguiente.Count > 0)
+                {
+                    string rutaSiguiente = CarpetaSiguiente.Pop();
+                    CarpetaAtras.Push(rutaCarpeta); // Guardar la carpeta actual para "Atras"
+                    ImageManage(rutaSiguiente);
+                }
+                else
+                {
+                    Style.MostrarError("No hay carpeta siguiente.");
+                    NavegarCarpetas(rutaCarpeta);
+                }
+            }else if (opcionNavegar == 4)
+            {
+                UI.MenuPrincipal.ProcesarImagenExif(rutaCarpeta);
+                NavegarCarpetas(rutaCarpeta);
+            }
+                return;
         }
 
         private static bool ValidarCarpeta(string ruta)
@@ -40,20 +99,18 @@ namespace ImageMetadataTools.Services
                     imagenes.Add(archivo);
                 }
             }
-
             return imagenes;
         }
         private static List<string> ObtenerCarpetas(string ruta)
         {
             List<string> carpe = new List<string>();
-            string[] carpeta = Directory.GetDirectories(ruta, "*", SearchOption.TopDirectoryOnly);  // 4  
+            string[] carpeta = Directory.GetDirectories(ruta);  // 4  
 
-            foreach (string archivo in Directory.GetFiles(ruta))
+            foreach (string archivo in carpeta)
             {
               carpe.Add(archivo);
             }
             return carpe;
-
         }
 
         private static void MostrarImagenesEncontradas(string ruta, List<string> imagenes)
@@ -69,7 +126,7 @@ namespace ImageMetadataTools.Services
             }
         }
 
-        public static void MostrarNombres(List<string> imagenes)
+        public static void MostrarNombres(List<string> imagenes, ConsoleColor color)
         {
             if (imagenes == null || imagenes.Count == 0)
                 return;
@@ -91,14 +148,14 @@ namespace ImageMetadataTools.Services
             for (int i = 0; i < imagenes.Count; i++)
             {
                 string nombre = Path.GetFileName(imagenes[i]);
-                Console.Write(string.Format("{0,-" + anchoColumna + "}", nombre));
-
+                Style.MostrarContenido(nombre, color, anchoColumna);
                 if ((i + 1) % columnas == 0)
                     Console.WriteLine();
             }
             Console.WriteLine(); // Salto final
         }
     }
+
 }
 
 /*  

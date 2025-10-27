@@ -1,4 +1,6 @@
-﻿namespace ImageMetadataTools.css
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace ImageMetadataTools.css
 {
     public class Style
     {
@@ -11,7 +13,7 @@
 
             if (ancho >= 120)
             {
-                Console.WriteLine("║ 1. Procesar imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Buscar Carpeta. ║ 4. Agrupar imágenes. ║ 5. Salir.    ║");
+                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Ingresar Carpeta. ║ 4. Agrupar Imágenes. ║ 5. Salir.  ║");
             }
             else
             {
@@ -29,9 +31,9 @@
         {
             //Console.Clear();
             Console.WriteLine("\n╔═════════════════════════════════════ Agrupar Imágenes ═══════════════════════════════════════════════════════════╗");
-            Console.WriteLine("║ 1. Agrupar por fecha.                                                                                           ║");
-            Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                  ║");
-            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.WriteLine(  "║ 1. Agrupar por fecha.                                                                                            ║");
+            Console.WriteLine(  "║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                   ║");
+            Console.WriteLine("  ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
             Console.Write("\nSeleccione una opción: ");
 
             if (int.TryParse(Console.ReadLine(), out int subopcion))
@@ -40,6 +42,19 @@
             return -1; // opción inválida
         }
 
+        public static int MostarMenuNavegar()
+        {
+            //Console.Clear();
+            Console.WriteLine("\n    ╔═════════════════════════════════════ Navegar Carpeta ══════════════════════════════════╗");
+            Console.WriteLine("    ║ 1. Ingresar Carpeta ║ 2. Atras  ║ 3. Siguiente  ║ 4. Procesar Imagen  ║ 5. Salir       ║                                                                                                         ║");
+            Console.WriteLine("    ╚════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.Write("\nSeleccione una opción: ");
+
+            if (int.TryParse(Console.ReadLine(), out int subopcion))
+                return subopcion;
+
+            return -1; // opción inválida
+        }
         #region colores
         //2 
         public static void MostrarLiena(ConsoleColor color)
@@ -76,8 +91,15 @@
         {
             Console.ForegroundColor = color;
             Console.WriteLine(cometario);
-            //Console.ResetColor();
+            Console.ResetColor();
         }
+        public static void MostrarContenido(string nombre, ConsoleColor color, int anchoColumna)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(string.Format("{0,-" + anchoColumna + "}", nombre));
+            Console.ResetColor();
+        }
+        
 
         #endregion colores
     }

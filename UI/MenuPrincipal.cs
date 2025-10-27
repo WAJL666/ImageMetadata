@@ -6,7 +6,7 @@ namespace ImageMetadataTools.UI
 {
     public class MenuPrincipal
     {
-        private MetadataInfo? metadata = null;
+        private static MetadataInfo? metadata = null;
         public static string rutaDestino = string.Empty;
 
         public void Inicio()
@@ -24,11 +24,15 @@ namespace ImageMetadataTools.UI
 
                 switch (option)
                 {
-                    case 1: ProcesarImagenExif(); 
+                    case 1: 
+                        rutaDestino = PedirRuta();
+                        ProcesarImagenExif(rutaDestino); 
                         break;
-                    case 2: GuardarInformacion(); 
+                    case 2: 
+                        GuardarInformacion(); 
                         break;
-                    case 3: IngresarCarpeta(); 
+                    case 3: 
+                        IngresarCarpeta(); 
                         break;
                     case 4:
                         int subopcion = Style.MostarMenuAgrupar();
@@ -64,7 +68,7 @@ namespace ImageMetadataTools.UI
         private static void IngresarCarpeta()
         {
            rutaDestino = PedirRuta();            
-            Manage.ImageManage(rutaDestino);
+           Manage.ImageManage(rutaDestino);
         }
 
         //Opcion 2. guarda metadatos en archivo plano txt
@@ -80,9 +84,8 @@ namespace ImageMetadataTools.UI
         }
 
         //Opcion 1, muestra los metadatos
-        private void ProcesarImagenExif()
+        public static void ProcesarImagenExif(string ruta)
         {
-            rutaDestino = PedirRuta();
             if (!ValidarArchivo(rutaDestino)) return;
 
             metadata = MetadataReader.GetMetadata(rutaDestino);
@@ -150,13 +153,11 @@ namespace ImageMetadataTools.UI
 
         private static string PedirRuta()
         {
-            Console.Write("\n\nIngrese la ruta: ");
-            
+            Style.MostrarComentarios("\nIngrese la ruta completa del archivo o carpeta.", ConsoleColor.Yellow);
             return Console.ReadLine().Trim('"');
         }
 
-        //valida si un archivo existe y su formato
-        //valida si un archivo existe y su formato
+     
         public static bool ValidarArchivo(string imagePath)
         {
             int msm = 0;
