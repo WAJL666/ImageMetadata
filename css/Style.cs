@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ImageMetadataTools.css
+﻿namespace ImageMetadataTools.css
 {
     public class Style
     {
@@ -31,9 +29,9 @@ namespace ImageMetadataTools.css
         {
             //Console.Clear();
             Console.WriteLine("\n╔═════════════════════════════════════ Agrupar Imágenes ═══════════════════════════════════════════════════════════╗");
-            Console.WriteLine(  "║ 1. Agrupar por fecha.                                                                                            ║");
-            Console.WriteLine(  "║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                   ║");
-            Console.WriteLine("  ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.WriteLine("║ 1. Agrupar por fecha.                                                                                            ║");
+            Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                   ║");
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
             Console.Write("\nSeleccione una opción: ");
 
             if (int.TryParse(Console.ReadLine(), out int subopcion))
@@ -45,8 +43,8 @@ namespace ImageMetadataTools.css
         public static int MostarMenuNavegar()
         {
             //Console.Clear();
-            Console.WriteLine("\n    ╔═════════════════════════════════════ Navegar Carpeta ══════════════════════════════════╗");
-            Console.WriteLine("    ║ 1. Ingresar Carpeta ║ 2. Atras  ║ 3. Siguiente  ║ 4. Procesar Imagen  ║ 5. Salir       ║                                                                                                         ║");
+            Console.WriteLine("\n  ╔═════════════════════════════════════ Navegar Carpeta ══════════════════════════════════╗");
+            Console.WriteLine("    ║ 1. Ir a subcarpeta ║ 2. Atras  ║ 3. Siguiente  ║ 4. Procesar Imagen  ║ 5. Salir        ║                                                                                                         ║");
             Console.WriteLine("    ╚════════════════════════════════════════════════════════════════════════════════════════╝");
             Console.Write("\nSeleccione una opción: ");
 
@@ -76,7 +74,7 @@ namespace ImageMetadataTools.css
             Console.WriteLine();
             MostrarLiena(ConsoleColor.Green);
             Console.WriteLine($"                     {titulo}");
-           MostrarLiena(ConsoleColor.Green);
+            MostrarLiena(ConsoleColor.Green);
             Console.ResetColor();
         }
         //4 
@@ -99,8 +97,6 @@ namespace ImageMetadataTools.css
             Console.Write(string.Format("{0,-" + anchoColumna + "}", nombre));
             Console.ResetColor();
         }
-        
-
         #endregion colores
     }
 }
