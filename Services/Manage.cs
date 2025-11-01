@@ -3,119 +3,125 @@ namespace ImageMetadataTools.Services
 {
     public class Manage
     {
-        private static readonly Stack<string> _carpetaAtras = new();       // pila para navegar atras
-        private static readonly Stack<string> _carpetaSiguiente = new();   // pila para navegar adelante
+        private static readonly Stack<string> _historialAtras = new();
+        private static readonly Stack<string> _historialAdelante = new();
 
-        public static Stack<string> CarpetaAtras => _carpetaAtras;
-        public static Stack<string> CarpetaSiguiente => _carpetaSiguiente;
+        public static Stack<string> HistorialAtras => _historialAtras;
+        public static Stack<string> HistorialAdelante => _historialAdelante;
 
-        public static void ImageManage(string rutaCarpeta)
+        #region Public Methods
+        public static void IniciarExploracion(string rutaInicial)
         {
-            if (!ValidarCarpeta(rutaCarpeta)) return;
-            CarpetaAtras.Push(rutaCarpeta); // carpeta inicial
+            if (!EsRutaValida(rutaInicial)) return;
 
-            List<string> imagenes = ObtenerImagenesValidas(rutaCarpeta);
-            MostrarImagenesEncontradas(rutaCarpeta, imagenes);
-            MostrarNombres(imagenes, ConsoleColor.Green);
+            string rutaActual = rutaInicial;
+            HistorialAtras.Clear();
+            HistorialAdelante.Clear();
 
-            List<string> carpetas = ObtenerCarpetas(rutaCarpeta);
-            MostrarNombres(carpetas, ConsoleColor.Magenta);
-
-            NavegarCarpetas(rutaCarpeta);
-        }
-
-        public static void NavegarCarpetas(string rutaCarpeta)
-        {
             while (true)
             {
-                int opcion = Style.MostarMenuNavegar();
-                if (!ProcesarOpcionNavegacion(opcion, rutaCarpeta))
+                MostrarContenidoCarpeta(rutaActual);
+                int opcion = Style.MostrarMenuNavegar();
+
+                if (!ProcesarOpcion(opcion, ref rutaActual))
                     break;
             }
         }
+        #endregion
 
-        private static bool ProcesarOpcionNavegacion(int opcion, string rutaActual)
+        #region Private Methods
+        private static void MostrarContenidoCarpeta(string ruta)
+        {
+            var imagenes = ObtenerImagenesValidas(ruta);
+            var carpetas = ObtenerSubcarpetas(ruta);
+
+            Style.MostrarTitulo(ruta, ConsoleColor.Green);
+            Console.WriteLine($"Imágenes encontradas: {imagenes.Count}");
+            Style.MostrarLinea(ConsoleColor.Green);
+
+            if (imagenes.Count == 0)
+                Style.MostrarError("No se encontraron imágenes en la carpeta.");
+
+            Style.MostrarLinea(ConsoleColor.Green);
+            MostrarListado(imagenes, ConsoleColor.Green);
+            MostrarListado(carpetas, ConsoleColor.Magenta);
+        }
+
+        private static bool ProcesarOpcion(int opcion, ref string rutaActual)
         {
             switch (opcion)
             {
                 case 1:
-                    return NavegarHaciaSubcarpeta(rutaActual);
-
+                    return NavegarASubcarpeta(ref rutaActual);
                 case 2:
-                    return NavegarHaciaAtras(rutaActual);
-
+                    return NavegarAtras(ref rutaActual);
                 case 3:
-                    return NavegarHaciaAdelante(rutaActual);
-
+                    return NavegarAdelante(ref rutaActual);
                 case 4:
                     UI.MenuPrincipal.ProcesarImagenExif(rutaActual);
                     return true;
-
-                case 5: // Opción para salir
+                case 5:
                     return false;
-
                 default:
                     Style.MostrarError("Opción inválida.");
                     return true;
             }
         }
 
-        private static bool NavegarHaciaSubcarpeta(string rutaActual)
+        private static bool NavegarASubcarpeta(ref string rutaActual)
         {
-            Style.MostrarComentarios("\nIngrese nombre de la carpeta:", ConsoleColor.Cyan);
-            string nombreCarpeta = Console.ReadLine().Trim();
+            Style.MostrarComentarios("\nIngrese nombre de la subcarpeta:", ConsoleColor.Cyan);
+            string nombre = Console.ReadLine()?.Trim();
 
-            if (string.IsNullOrWhiteSpace(nombreCarpeta))
+            if (string.IsNullOrWhiteSpace(nombre))
             {
-                Style.MostrarError("Nombre de carpeta vacío.");
+                Style.MostrarError("Nombre vacío.");
                 return true;
             }
 
-            string nuevaRuta = Path.Combine(rutaActual, nombreCarpeta);
+            string nuevaRuta = Path.Combine(rutaActual, nombre);
 
-            if (!ValidarCarpeta(nuevaRuta))
+            if (!EsRutaValida(nuevaRuta))
             {
                 Style.MostrarError("La carpeta no existe.");
                 return true;
             }
 
-            CarpetaAtras.Push(rutaActual);
-            CarpetaSiguiente.Clear();
-            ImageManage(nuevaRuta);
-            return false;
+            HistorialAtras.Push(rutaActual);
+            HistorialAdelante.Clear();
+            rutaActual = nuevaRuta;
+            return true;
         }
 
-        private static bool NavegarHaciaAtras(string rutaActual)
+        private static bool NavegarAtras(ref string rutaActual)
         {
-            if (CarpetaAtras.Count == 0)
+            if (HistorialAtras.Count == 0)
             {
                 Style.MostrarError("No hay carpeta anterior.");
                 return true;
             }
 
-            string rutaAnterior = CarpetaAtras.Pop();
-            CarpetaSiguiente.Push(rutaActual);
-            NavegarCarpetas(rutaAnterior); 
-            return false;
+            HistorialAdelante.Push(rutaActual);
+            rutaActual = HistorialAtras.Pop();
+            return true;
         }
 
-        private static bool NavegarHaciaAdelante(string rutaActual)
+        private static bool NavegarAdelante(ref string rutaActual)
         {
-            if (CarpetaSiguiente.Count == 0)
+            if (HistorialAdelante.Count == 0)
             {
                 Style.MostrarError("No hay carpeta siguiente.");
                 return true;
             }
 
-            string rutaSiguiente = CarpetaSiguiente.Pop();
-            CarpetaAtras.Push(rutaActual);
-            NavegarCarpetas(rutaSiguiente); 
-            return false;
+            HistorialAtras.Push(rutaActual);
+            rutaActual = HistorialAdelante.Pop();
+            return true;
         }
 
-        private static bool ValidarCarpeta(string ruta)
+        private static bool EsRutaValida(string ruta)
         {
-            if (!Directory.Exists(ruta)) // 1
+            if (!Directory.Exists(ruta))
             {
                 Style.MostrarError("La carpeta no existe. Intente de nuevo.");
                 return false;
@@ -125,70 +131,34 @@ namespace ImageMetadataTools.Services
 
         private static List<string> ObtenerImagenesValidas(string ruta)
         {
-            List<string> imagenes = [];
-
-            foreach (string archivo in Directory.GetFiles(ruta))
-            {
-                if (UI.MenuPrincipal.ValidarArchivo(archivo))
-                {
-                    imagenes.Add(archivo);
-                }
-            }
-            return imagenes;
-        }
-        private static List<string> ObtenerCarpetas(string ruta)
-        {
-            List<string> carpe = [];
-            string[] carpeta = Directory.GetDirectories(ruta);  // 4  
-
-            foreach (string archivo in carpeta)
-            {
-                carpe.Add(archivo);
-            }
-            return carpe;
+            return [.. Directory.GetFiles(ruta).Where(UI.MenuPrincipal.ValidarArchivo)];
         }
 
-        private static void MostrarImagenesEncontradas(string ruta, List<string> imagenes)
+        private static List<string> ObtenerSubcarpetas(string ruta)
         {
-            Style.MostrarTitulo(ruta, ConsoleColor.Green);  // 6
-            Console.WriteLine($"Imágenes encontradas: {imagenes.Count}");
-            Style.MostrarLiena(ConsoleColor.Green);
-
-            if (imagenes.Count == 0)
-            {
-                Style.MostrarError("No se encontraron imágenes en la carpeta.");
-                Style.MostrarLiena(ConsoleColor.Green);
-            }
+            return [.. Directory.GetDirectories(ruta)];
         }
 
-        public static void MostrarNombres(List<string> imagenes, ConsoleColor color)
+        private static void MostrarListado(List<string> elementos, ConsoleColor color)
         {
-            if (imagenes == null || imagenes.Count == 0)
+            if (elementos == null || elementos.Count == 0)
                 return;
 
-            // Calcular el ancho máximo del nombre de archivo
-            int anchoMaximo = imagenes
-                .Select(img => Path.GetFileName(img).Length)
-                .Max();
-
-            // Añadir margen para separación visual
-            int anchoColumna = anchoMaximo + 2;
-
-            // Obtener el ancho de la consola
+            int anchoMax = elementos.Select(e => Path.GetFileName(e).Length).Max();
+            int anchoColumna = anchoMax + 2;
             int anchoConsola = Console.WindowWidth;
-
-            // Calcular cuántas columnas caben
             int columnas = Math.Max(1, anchoConsola / anchoColumna);
 
-            for (int i = 0; i < imagenes.Count; i++)
+            for (int i = 0; i < elementos.Count; i++)
             {
-                string nombre = Path.GetFileName(imagenes[i]);
+                string nombre = Path.GetFileName(elementos[i]);
                 Style.MostrarContenido(nombre, color, anchoColumna);
                 if ((i + 1) % columnas == 0)
                     Console.WriteLine();
             }
-            Console.WriteLine(); // Salto final
+            Console.WriteLine();
         }
+        #endregion
     }
 }
 

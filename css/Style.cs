@@ -1,10 +1,9 @@
 ﻿namespace ImageMetadataTools.css
 {
-    public class Style
+    public static class Style
     {
         public static void MostrarMenu()
         {
-            //Console.Clear();
             int ancho = Console.WindowWidth;
 
             Console.WriteLine("\n╔═════════════════════════════════════════════ Lector De Metadatos ═════════════════════════════════════════════════╗");
@@ -25,79 +24,75 @@
             Console.WriteLine("╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
             Console.Write("\nSeleccione una opción: ");
         }
-        public static int MostarMenuAgrupar()
+
+        public static int MostrarMenuAgrupar()
         {
-            //Console.Clear();
             Console.WriteLine("\n╔═════════════════════════════════════ Agrupar Imágenes ═══════════════════════════════════════════════════════════╗");
             Console.WriteLine("║ 1. Agrupar por fecha.                                                                                            ║");
             Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                   ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
             Console.Write("\nSeleccione una opción: ");
-
-            if (int.TryParse(Console.ReadLine(), out int subopcion))
-                return subopcion;
-
-            return -1; // opción inválida
+            return LeerOpcion();
         }
 
-        public static int MostarMenuNavegar()
+        public static int MostrarMenuNavegar()
         {
-            //Console.Clear();
-            Console.WriteLine("\n  ╔═════════════════════════════════════ Navegar Carpeta ══════════════════════════════════╗");
-            Console.WriteLine("    ║ 1. Ir a subcarpeta ║ 2. Atras  ║ 3. Siguiente  ║ 4. Procesar Imagen  ║ 5. Salir        ║                                                                                                         ║");
-            Console.WriteLine("    ╚════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.WriteLine("\n╔═════════════════════════════════════ Navegar Carpeta ════════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║ 1. Ir a subcarpeta ║ 2. Atrás ║ 3. Siguiente ║ 4. Procesar Imagen ║ 5. Salir                                     ║");
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
             Console.Write("\nSeleccione una opción: ");
-
-            if (int.TryParse(Console.ReadLine(), out int subopcion))
-                return subopcion;
-
-            return -1; // opción inválida
+            return LeerOpcion();
         }
-        #region colores
-        //2 
-        public static void MostrarLiena(ConsoleColor color)
+
+        private static int LeerOpcion()
         {
-            int anchoConsola = Console.WindowWidth;
-            Console.ForegroundColor = color;//2.1 
-            for (int i = 0; i < anchoConsola; i++)
-            {
-                Console.Write("─");
-            }
-            Console.WriteLine();
-            Console.ResetColor(); //2.2 
+            if (int.TryParse(Console.ReadLine(), out int opcion))
+                return opcion;
+            return -1;
         }
 
-        //3 
+        public static void MostrarLinea(ConsoleColor color)
+        {
+            int anchoConsola = Math.Max(40, Console.WindowWidth);
+            Console.ForegroundColor = color;
+            Console.WriteLine(new string('─', anchoConsola));
+            Console.ResetColor();
+        }
+
         public static void MostrarTitulo(string titulo, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.WriteLine();
-            MostrarLiena(ConsoleColor.Green);
-            Console.WriteLine($"                     {titulo}");
-            MostrarLiena(ConsoleColor.Green);
+            MostrarLinea(color);
+
+            int ancho = Console.WindowWidth;
+            int margen = Math.Max(0, (ancho - titulo.Length) / 2);
+            Console.WriteLine(new string(' ', margen) + titulo);
+
+            MostrarLinea(color);
             Console.ResetColor();
         }
-        //4 
-        public static void MostrarError(string cometario)
+
+        public static void MostrarError(string mensaje)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(cometario);
+            Console.WriteLine(mensaje);
             Console.ResetColor();
         }
-        //5
-        public static void MostrarComentarios(string cometario, ConsoleColor color)
+
+        public static void MostrarComentarios(string mensaje, ConsoleColor color)
         {
             Console.ForegroundColor = color;
-            Console.WriteLine(cometario);
+            Console.WriteLine(mensaje);
             Console.ResetColor();
         }
+
         public static void MostrarContenido(string nombre, ConsoleColor color, int anchoColumna)
         {
             Console.ForegroundColor = color;
             Console.Write(string.Format("{0,-" + anchoColumna + "}", nombre));
             Console.ResetColor();
         }
-        #endregion colores
     }
 }
 

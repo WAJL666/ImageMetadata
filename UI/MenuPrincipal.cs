@@ -28,14 +28,14 @@ namespace ImageMetadataTools.UI
                         rutaDestino = PedirRuta();
                         ProcesarImagenExif(rutaDestino); 
                         break;
-                    case 2: 
+                    case 2:
                         GuardarInformacion(); 
                         break;
                     case 3: 
                         IngresarCarpeta(); 
                         break;
                     case 4:
-                        int subopcion = Style.MostarMenuAgrupar();
+                        int subopcion = Style.MostrarMenuAgrupar();
                         switch (subopcion)
                         {
                             case 1:
@@ -68,11 +68,11 @@ namespace ImageMetadataTools.UI
         private static void IngresarCarpeta()
         {
            rutaDestino = PedirRuta();            
-           Manage.ImageManage(rutaDestino);
+           Manage.IniciarExploracion(rutaDestino);
         }
 
         //Opcion 2. guarda metadatos en archivo plano txt
-        private void GuardarInformacion()
+        private static void GuardarInformacion()
         {
             if (metadata == null)
             {
@@ -105,7 +105,7 @@ namespace ImageMetadataTools.UI
         private static void MostrarMetadatos(MetadataInfo metadata)
         {
             Console.ResetColor();
-            Style.MostrarLiena(ConsoleColor.DarkGray);
+            Style.MostrarLinea(ConsoleColor.DarkGray);
             Style.MostrarTitulo("Información Básica", ConsoleColor.Cyan);
             //Información básica
             Console.WriteLine($"Archivo: {metadata.FileName}");
@@ -141,7 +141,7 @@ namespace ImageMetadataTools.UI
             Console.WriteLine($"Latitud: {metadata.GPSLatitude}");
             Console.WriteLine($"Longitud: {metadata.GPSLongitude}");
             Console.WriteLine($"Altitud: {metadata.GPSAltitude}");
-            Style.MostrarLiena(ConsoleColor.DarkGray);
+            Style.MostrarLinea(ConsoleColor.DarkGray);
         }
 
         //vuelve al menu
