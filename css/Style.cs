@@ -2,6 +2,7 @@
 {
     public static class Style
     {
+        // Muestra el menú principal con opciones
         public static void MostrarMenu()
         {
             int ancho = Console.WindowWidth;
@@ -25,6 +26,7 @@
             Console.Write("\nSeleccione una opción: ");
         }
 
+        // Muestra el submenú para agrupar imágenes
         public static int MostrarMenuAgrupar()
         {
             Console.WriteLine("\n╔═════════════════════════════════════ Agrupar Imágenes ═══════════════════════════════════════════════════════════╗");
@@ -35,6 +37,7 @@
             return LeerOpcion();
         }
 
+        // Muestra el submenú para navegar carpetas
         public static int MostrarMenuNavegar()
         {
             Console.WriteLine("\n╔═════════════════════════════════════ Navegar Carpeta ════════════════════════════════════════════════════════════╗");
@@ -44,6 +47,7 @@
             return LeerOpcion();
         }
 
+        // Lee y valida la opción ingresada por el usuario
         private static int LeerOpcion()
         {
             if (int.TryParse(Console.ReadLine(), out int opcion))
@@ -51,6 +55,7 @@
             return -1;
         }
 
+        // Muestra una línea horizontal con el color especificado
         public static void MostrarLinea(ConsoleColor color)
         {
             int anchoConsola = Math.Max(40, Console.WindowWidth);
@@ -59,6 +64,7 @@
             Console.ResetColor();
         }
 
+        // Muestra un título centrado con el color especificado
         public static void MostrarTitulo(string titulo, ConsoleColor color)
         {
             Console.ForegroundColor = color;
@@ -73,6 +79,7 @@
             Console.ResetColor();
         }
 
+        // Muestra un mensaje de error en color rojo
         public static void MostrarError(string mensaje)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -80,6 +87,7 @@
             Console.ResetColor();
         }
 
+        // Muestra un comentario con el color especificado
         public static void MostrarComentarios(string mensaje, ConsoleColor color)
         {
             Console.ForegroundColor = color;
@@ -87,6 +95,7 @@
             Console.ResetColor();
         }
 
+        // Muestra contenido con el color y ancho de columna especificados
         public static void MostrarContenido(string nombre, ConsoleColor color, int anchoColumna)
         {
             Console.ForegroundColor = color;

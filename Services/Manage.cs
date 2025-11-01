@@ -58,7 +58,7 @@ namespace ImageMetadataTools.Services
                 case 3:
                     return NavegarAdelante(ref rutaActual);
                 case 4:
-                    UI.MenuPrincipal.ProcesarImagenExif(rutaActual);
+                    UI.OperMenu.ProcesarImagen(rutaActual);
                     return true;
                 case 5:
                     return false;
@@ -131,7 +131,7 @@ namespace ImageMetadataTools.Services
 
         private static List<string> ObtenerImagenesValidas(string ruta)
         {
-            return [.. Directory.GetFiles(ruta).Where(UI.MenuPrincipal.ValidarArchivo)];
+            return [.. Directory.GetFiles(ruta).Where(UI.OperMenu.ValidarArchivo)];
         }
 
         private static List<string> ObtenerSubcarpetas(string ruta)

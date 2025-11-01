@@ -1,7 +1,7 @@
 ﻿using ImageMetadataTools.UI;
 
 MenuPrincipal menu = new();
-menu.Inicio();
+MenuPrincipal.Inicio();
 
 /*
     lo suyo de agrupar por fecha
