@@ -11,7 +11,7 @@
 
             if (ancho >= 120)
             {
-                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Ingresar Carpeta. ║ 4. Agrupar Imágenes. ║ 5. Salir.  ║");
+                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Navegar. ║ 4. Agrupar Imágenes. ║ 5. Salir.  ║");
             }
             else
             {
@@ -70,6 +70,7 @@
             Console.ForegroundColor = color;
             Console.WriteLine();
             MostrarLinea(color);
+            Console.ResetColor();
 
             int ancho = Console.WindowWidth;
             int margen = Math.Max(0, (ancho - titulo.Length) / 2);

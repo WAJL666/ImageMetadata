@@ -1,4 +1,5 @@
 ﻿using ImageMetadataTools.css;
+using ImageMetadataTools.UI;
 namespace ImageMetadataTools.Services
 {
     public class Manage
@@ -32,11 +33,11 @@ namespace ImageMetadataTools.Services
         #region Private Methods
         private static void MostrarContenidoCarpeta(string ruta)
         {
-            var imagenes = ObtenerImagenesValidas(ruta);
             var carpetas = ObtenerSubcarpetas(ruta);
+            var imagenes = ObtenerImagenesValidas(ruta);           
 
             Style.MostrarTitulo(ruta, ConsoleColor.Green);
-            Console.WriteLine($"Imágenes encontradas: {imagenes.Count}");
+            Style.MostrarComentarios($"Imágenes encontradas: {imagenes.Count}", ConsoleColor.White);
             Style.MostrarLinea(ConsoleColor.Green);
 
             if (imagenes.Count == 0)
@@ -58,7 +59,7 @@ namespace ImageMetadataTools.Services
                 case 3:
                     return NavegarAdelante(ref rutaActual);
                 case 4:
-                    UI.OperMenu.ProcesarImagen(rutaActual);
+                    ProcesarImage(ref rutaActual);                    
                     return true;
                 case 5:
                     return false;
@@ -66,6 +67,12 @@ namespace ImageMetadataTools.Services
                     Style.MostrarError("Opción inválida.");
                     return true;
             }
+        }
+
+        private static void ProcesarImage(ref string rutaActual)
+        {
+            string nombreImagen =MenuPrincipal.PedirRuta();
+            UI.OperMenu.ProcesarImagen(Path.Combine(rutaActual,nombreImagen));
         }
 
         private static bool NavegarASubcarpeta(ref string rutaActual)

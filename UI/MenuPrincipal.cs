@@ -47,9 +47,9 @@ namespace ImageMetadataTools.UI
             } while (option != 5);
         }
 
-        private static string PedirRuta()
+        public static string PedirRuta()
         {
-            Style.MostrarComentarios("\nIngrese la ruta completa del archivo o carpeta.", ConsoleColor.Yellow);
+            Style.MostrarComentarios("\nIngrese la ruta completa o nombre del archivo o carpeta.", ConsoleColor.Yellow);
             return Console.ReadLine().Trim('"');
         }
     }

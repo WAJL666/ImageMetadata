@@ -52,10 +52,10 @@ namespace ImageMetadataTools.UI
             switch (subopcion)
             {
                 case 1:
-                    Console.WriteLine("\nOpción 1: Agrupar por fecha");
+                    Style.MostrarComentarios("\nAgrupando imágenes por fecha", ConsoleColor.Green);
                     break;
                 case 2:
-                    Console.WriteLine("\nOpción 2: Agrupar por lugar");
+                    Style.MostrarComentarios("\nAgrupando imágenes por lugar", ConsoleColor.Green);
                     break;
                 default:
                     Style.MostrarError("Opción no válida en el submenú.");
@@ -93,46 +93,46 @@ namespace ImageMetadataTools.UI
             Style.MostrarLinea(ConsoleColor.DarkGray);
             //Información básica
             Style.MostrarTitulo("Información Básica", ConsoleColor.Cyan);
-            Console.WriteLine($"Archivo: {metadata.FileName}");
-            Console.WriteLine($"Peso: {metadata.FileSize}");
-            Console.WriteLine($"Dimensiones: {metadata.Width} x {metadata.Height}");
-            Console.WriteLine($"Formato: {metadata.Format}");
-            Console.WriteLine($"Orientación: {metadata.Orientation}");
+            Style.MostrarComentarios($"Archivo: {metadata.FileName}",ConsoleColor.White);
+            Style.MostrarComentarios($"Peso: {metadata.FileSize}",ConsoleColor.White);
+            Style.MostrarComentarios($"Dimensiones: {metadata.Width} x {metadata.Height}", ConsoleColor.White);
+            Style.MostrarComentarios($"Formato: {metadata.Format}", ConsoleColor.White);
+            Style.MostrarComentarios($"Orientación: {metadata.Orientation}", ConsoleColor.White);
             //Información de la cámara
             Style.MostrarTitulo("Información de la Cámara", ConsoleColor.Magenta);
-            Console.WriteLine($"Fabricante: {metadata.CameraMake}");
-            Console.WriteLine($"Modelo: {metadata.CameraModel}");
-            Console.WriteLine($"Software: {metadata.Software}");
+            Style.MostrarComentarios($"Fabricante: {metadata.CameraMake}", ConsoleColor.White);
+            Style.MostrarComentarios($"Modelo: {metadata.CameraModel}", ConsoleColor.White);
+            Style.MostrarComentarios($"Software: {metadata.Software}", ConsoleColor.White);
             //Información de la fotografía
             Style.MostrarTitulo("Fotografía", ConsoleColor.Blue);
-            Console.WriteLine($"Fecha de captura: {metadata.DateTaken}");
-            Console.WriteLine($"Fecha digitalización: {metadata.DateDigitized}");
-            Console.WriteLine($"Exposición: {metadata.ExposureTime}");
-            Console.WriteLine($"Apertura: {metadata.Aperture}");
-            Console.WriteLine($"ISO: {metadata.ISO}");
-            Console.WriteLine($"Focal: {metadata.FocalLength}");
-            Console.WriteLine($"Programa: {metadata.ExposureProgram}");
-            Console.WriteLine($"Medición: {metadata.MeteringMode}");
-            Console.WriteLine($"Flash: {metadata.Flash}");
+            Style.MostrarComentarios($"Fecha de captura: {metadata.DateTaken}", ConsoleColor.White);
+            Style.MostrarComentarios($"Fecha digitalización: {metadata.DateDigitized}", ConsoleColor.White);
+            Style.MostrarComentarios($"Exposición: {metadata.ExposureTime}", ConsoleColor.White);
+            Style.MostrarComentarios($"Apertura: {metadata.Aperture}", ConsoleColor.White);
+            Style.MostrarComentarios($"ISO: {metadata.ISO}", ConsoleColor.White);
+            Style.MostrarComentarios($"Focal: {metadata.FocalLength}", ConsoleColor.White);
+            Style.MostrarComentarios($"Programa: {metadata.ExposureProgram}", ConsoleColor.White);
+            Style.MostrarComentarios($"Medición: {metadata.MeteringMode}", ConsoleColor.White);
+            Style.MostrarComentarios($"Flash: {metadata.Flash}", ConsoleColor.White);
             //Información del lente
             Style.MostrarTitulo("Lente", ConsoleColor.DarkYellow);
-            Console.WriteLine($"Fabricante: {metadata.LensMake}");
-            Console.WriteLine($"Modelo: {metadata.LensModel}");
-            Console.WriteLine($"Balance blancos: {metadata.WhiteBalance}");
-            Console.WriteLine($"Fuente de luz: {metadata.LightSource}");
-            Console.WriteLine($"Zoom digital: {metadata.DigitalZoomRatio}");
+            Style.MostrarComentarios($"Fabricante: {metadata.LensMake}", ConsoleColor.White);
+            Style.MostrarComentarios($"Modelo: {metadata.LensModel}", ConsoleColor.White);
+            Style.MostrarComentarios($"Balance blancos: {metadata.WhiteBalance}", ConsoleColor.White);
+            Style.MostrarComentarios($"Fuente de luz: {metadata.LightSource}", ConsoleColor.White);
+            Style.MostrarComentarios($"Zoom digital: {metadata.DigitalZoomRatio}", ConsoleColor.White);
             //Información GPS
             Style.MostrarTitulo("GPS", ConsoleColor.Yellow);
-            Console.WriteLine($"Latitud: {metadata.GPSLatitude}");
-            Console.WriteLine($"Longitud: {metadata.GPSLongitude}");
-            Console.WriteLine($"Altitud: {metadata.GPSAltitude}");
+            Style.MostrarComentarios($"Latitud: {metadata.GPSLatitude}", ConsoleColor.White);
+            Style.MostrarComentarios($"Longitud: {metadata.GPSLongitude}", ConsoleColor.White);
+            Style.MostrarComentarios($"Altitud: {metadata.GPSAltitude}", ConsoleColor.White);
             Style.MostrarLinea(ConsoleColor.DarkGray);
         }
 
         //Pausa antes de volver al menu
         private static void VolverAlMenu()
         {
-            Console.WriteLine("\nPresione cualquier tecla para volver al menú...");
+            Style.MostrarComentarios("\nPresione cualquier tecla para volver al menú...",ConsoleColor.White);
             Console.ReadKey();
         }
     }
