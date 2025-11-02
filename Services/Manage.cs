@@ -3,34 +3,21 @@ namespace ImageMetadataTools.Services
 {
     public class Manage
     {
+        #region Attributes
+        // Historial de navegación de carpetas.
         private static readonly Stack<string> _historialAtras = new();
         private static readonly Stack<string> _historialAdelante = new();
-
-        public static Stack<string> HistorialAtras => _historialAtras;
-        public static Stack<string> HistorialAdelante => _historialAdelante;
-
-        #region Public Methods
-        public static void IniciarExploracion(string rutaInicial)
-        {
-            if (!EsRutaValida(rutaInicial)) return;
-
-            string rutaActual = rutaInicial;
-            HistorialAtras.Clear();
-            HistorialAdelante.Clear();
-
-            while (true)
-            {
-                MostrarContenidoCarpeta(rutaActual);
-                int opcion = Style.MostrarMenuNavegar();
-
-                if (!ProcesarOpcion(opcion, ref rutaActual))
-                    break;
-            }
-        }
         #endregion
 
-        #region Private Methods
-        private static void MostrarContenidoCarpeta(string ruta)
+        #region Properties
+        // Propiedades para acceder al historial de navegación.
+        public static Stack<string> HistorialAtras => _historialAtras;
+        public static Stack<string> HistorialAdelante => _historialAdelante;
+        #endregion
+
+        #region Public Methods
+        // Muestra el contenido de la carpeta: imágenes y subcarpetas.
+        public static void MostrarContenidoCarpeta(string ruta)
         {
             var imagenes = ObtenerImagenesValidas(ruta);
             var carpetas = ObtenerSubcarpetas(ruta);
@@ -47,28 +34,8 @@ namespace ImageMetadataTools.Services
             MostrarListado(carpetas, ConsoleColor.Magenta);
         }
 
-        private static bool ProcesarOpcion(int opcion, ref string rutaActual)
-        {
-            switch (opcion)
-            {
-                case 1:
-                    return NavegarASubcarpeta(ref rutaActual);
-                case 2:
-                    return NavegarAtras(ref rutaActual);
-                case 3:
-                    return NavegarAdelante(ref rutaActual);
-                case 4:
-                    UI.OperMenu.ProcesarImagen(rutaActual);
-                    return true;
-                case 5:
-                    return false;
-                default:
-                    Style.MostrarError("Opción inválida.");
-                    return true;
-            }
-        }
-
-        private static bool NavegarASubcarpeta(ref string rutaActual)
+        // Navega a una subcarpeta dentro de la ruta actual.
+        public static bool NavegarASubcarpeta(ref string rutaActual)
         {
             Style.MostrarComentarios("\nIngrese nombre de la subcarpeta:", ConsoleColor.Cyan);
             string nombre = Console.ReadLine()?.Trim();
@@ -93,7 +60,8 @@ namespace ImageMetadataTools.Services
             return true;
         }
 
-        private static bool NavegarAtras(ref string rutaActual)
+        // Navega a la carpeta anterior en el historial.
+        public static bool NavegarAtras(ref string rutaActual)
         {
             if (HistorialAtras.Count == 0)
             {
@@ -106,7 +74,8 @@ namespace ImageMetadataTools.Services
             return true;
         }
 
-        private static bool NavegarAdelante(ref string rutaActual)
+        // Navega a la carpeta siguiente en el historial.
+        public static bool NavegarAdelante(ref string rutaActual)
         {
             if (HistorialAdelante.Count == 0)
             {
@@ -118,7 +87,10 @@ namespace ImageMetadataTools.Services
             rutaActual = HistorialAdelante.Pop();
             return true;
         }
+        #endregion
 
+        #region Private Methods
+        // Verifica si la ruta de la carpeta es válida.
         private static bool EsRutaValida(string ruta)
         {
             if (!Directory.Exists(ruta))
@@ -129,16 +101,19 @@ namespace ImageMetadataTools.Services
             return true;
         }
 
+        // Obtiene las imágenes válidas en la carpeta.
         private static List<string> ObtenerImagenesValidas(string ruta)
         {
             return [.. Directory.GetFiles(ruta).Where(UI.OperMenu.ValidarArchivo)];
         }
 
+        // Obtiene las subcarpetas en la carpeta.
         private static List<string> ObtenerSubcarpetas(string ruta)
         {
             return [.. Directory.GetDirectories(ruta)];
         }
 
+        // Muestra una lista de elementos en columnas.
         private static void MostrarListado(List<string> elementos, ConsoleColor color)
         {
             if (elementos == null || elementos.Count == 0)

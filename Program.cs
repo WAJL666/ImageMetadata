@@ -1,6 +1,5 @@
 ﻿using ImageMetadataTools.UI;
 
-MenuPrincipal menu = new();
 MenuPrincipal.Inicio();
 
 /*
