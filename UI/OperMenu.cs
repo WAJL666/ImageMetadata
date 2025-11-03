@@ -6,8 +6,12 @@ namespace ImageMetadataTools.UI
 {
     public class OperMenu
     {
+        #region Attributes
+        //Almacena los metadatos leídos
         private static MetadataInfo? metadata = null;
-        
+        #endregion
+
+        #region Public Methods
         //Opcion 1, muestra los metadatos
         public static void ProcesarImagen(string ruta)
         {
@@ -43,7 +47,7 @@ namespace ImageMetadataTools.UI
         public static void IngresarCarpeta(string ruta)
         {
             //rutaDestino = PedirRuta();
-            Manage.IniciarExploracion(ruta);
+            //Manage.IniciarExploracion(ruta);
         }
 
         //Opcion 4, agrupa imagenes
@@ -85,7 +89,9 @@ namespace ImageMetadataTools.UI
 
             return true;
         }
+        #endregion
 
+        #region Private Methods
         //Muestra los metadatos en consola
         private static void MostrarMetadatos(MetadataInfo metadata)
         {
@@ -135,5 +141,6 @@ namespace ImageMetadataTools.UI
             Style.MostrarComentarios("\nPresione cualquier tecla para volver al menú...",ConsoleColor.White);
             Console.ReadKey();
         }
+        #endregion
     }
 }
