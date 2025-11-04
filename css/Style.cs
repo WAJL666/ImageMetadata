@@ -103,6 +103,31 @@
             Console.Write(string.Format("{0,-" + anchoColumna + "}", nombre));
             Console.ResetColor();
         }
+
+        // Muestra una lista de elementos en columnas.
+        public static void MostrarListado(List<string> elementos, ConsoleColor color)
+        {
+            if (elementos == null || elementos.Count == 0)
+                return;
+
+            int anchoMax = elementos.Select(e => Path.GetFileName(e).Length).Max();
+            int anchoColumna = anchoMax + 2;
+            int anchoConsola = Console.WindowWidth;
+            int columnas = Math.Max(1, anchoConsola / anchoColumna);
+
+            for (int i = 0; i < elementos.Count; i++)
+            {
+                string nombre = Path.GetFileName(elementos[i]);
+                Style.MostrarContenido(nombre, color, anchoColumna);
+                if ((i + 1) % columnas == 0)
+                    Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
+        public static void LimpiarPantalla()
+        {
+            Console.Clear();
+        }
     }
 }
 

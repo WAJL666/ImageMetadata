@@ -67,8 +67,7 @@ namespace ImageMetadataTools.UI
                 case 3:
                     return Manage.NavegarAdelante(ref rutaActual);
                 case 4:
-                    OperMenu.ProcesarImagen(rutaActual);
-                    return true;
+                   return OperMenu.ProcesaImage(ref rutaActual);                    
                 case 5:
                     return false;
                 default:
@@ -76,6 +75,8 @@ namespace ImageMetadataTools.UI
                     return true;
             }
         }
+
+     
 
         // Inicia la navegación por carpetas.
         private static void IniciarNavegacion()
@@ -101,7 +102,7 @@ namespace ImageMetadataTools.UI
         }
 
         // Solicita al usuario que ingrese una ruta de archivo o carpeta.
-        private static string PedirRuta()
+        public  static string PedirRuta()
         {
             Style.MostrarComentarios("\nIngrese la ruta completa o nombre del archivo o carpeta.", ConsoleColor.Yellow);
             return Console.ReadLine().Trim('"');

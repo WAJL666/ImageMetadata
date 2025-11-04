@@ -17,23 +17,7 @@ namespace ImageMetadataTools.Services
         #endregion
 
         #region Public Methods
-        public static void IniciarExploracion(string rutaInicial)
-        {
-            if (!EsRutaValida(rutaInicial)) return;
-
-            string rutaActual = rutaInicial;
-            HistorialAtras.Clear();
-            HistorialAdelante.Clear();
-
-            while (true)
-            {
-                MostrarContenidoCarpeta(rutaActual);
-                int opcion = Style.MostrarMenuNavegar();
-
-                if (!ProcesarOpcion(opcion, ref rutaActual))
-                    break;
-            }
-        }
+       
         #endregion
 
         #region Private Methods
@@ -41,7 +25,7 @@ namespace ImageMetadataTools.Services
         {
             var imagenes = ObtenerImagenesValidas(ruta);
             var carpetas = ObtenerSubcarpetas(ruta);
-            var imagenes = ObtenerImagenesValidas(ruta);           
+           
 
             Style.MostrarTitulo(ruta, ConsoleColor.Green);
             Style.MostrarComentarios($"Imágenes encontradas: {imagenes.Count}", ConsoleColor.White);
@@ -51,33 +35,14 @@ namespace ImageMetadataTools.Services
                 Style.MostrarError("No se encontraron imágenes en la carpeta.");
 
             Style.MostrarLinea(ConsoleColor.Green);
-            MostrarListado(imagenes, ConsoleColor.Green);
-            MostrarListado(carpetas, ConsoleColor.Magenta);
+            Style.MostrarListado(imagenes, ConsoleColor.Green);
+            Style.MostrarListado(carpetas, ConsoleColor.Magenta);
         }
 
         // Navega a una subcarpeta dentro de la ruta actual.
-        public static bool NavegarASubcarpeta(ref string rutaActual)
-        {
-            switch (opcion)
-            {
-                case 1:
-                    return NavegarASubcarpeta(ref rutaActual);
-                case 2:
-                    return NavegarAtras(ref rutaActual);
-                case 3:
-                    return NavegarAdelante(ref rutaActual);
-                case 4:
-                    UI.OperMenu.ProcesarImagen(rutaActual);
-                    return true;
-                case 5:
-                    return false;
-                default:
-                    Style.MostrarError("Opción inválida.");
-                    return true;
-            }
-        }
+       
 
-        private static bool NavegarASubcarpeta(ref string rutaActual)
+        public static bool NavegarASubcarpeta(ref string rutaActual)
         {
             Style.MostrarComentarios("\nIngrese nombre de la subcarpeta:", ConsoleColor.Cyan);
             string nombre = Console.ReadLine()?.Trim();
@@ -110,7 +75,7 @@ namespace ImageMetadataTools.Services
                 Style.MostrarError("No hay carpeta anterior.");
                 return true;
             }
-
+            Style.LimpiarPantalla();
             HistorialAdelante.Push(rutaActual);
             rutaActual = HistorialAtras.Pop();
             return true;
@@ -124,7 +89,7 @@ namespace ImageMetadataTools.Services
                 Style.MostrarError("No hay carpeta siguiente.");
                 return true;
             }
-
+            Style.LimpiarPantalla();
             HistorialAtras.Push(rutaActual);
             rutaActual = HistorialAdelante.Pop();
             return true;
@@ -133,7 +98,7 @@ namespace ImageMetadataTools.Services
 
         #region Private Methods
         // Verifica si la ruta de la carpeta es válida.
-        private static bool EsRutaValida(string ruta)
+        public static bool EsRutaValida(string ruta)
         {
             if (!Directory.Exists(ruta))
             {
@@ -153,28 +118,7 @@ namespace ImageMetadataTools.Services
         private static List<string> ObtenerSubcarpetas(string ruta)
         {
             return [.. Directory.GetDirectories(ruta)];
-        }
-
-        // Muestra una lista de elementos en columnas.
-        private static void MostrarListado(List<string> elementos, ConsoleColor color)
-        {
-            if (elementos == null || elementos.Count == 0)
-                return;
-
-            int anchoMax = elementos.Select(e => Path.GetFileName(e).Length).Max();
-            int anchoColumna = anchoMax + 2;
-            int anchoConsola = Console.WindowWidth;
-            int columnas = Math.Max(1, anchoConsola / anchoColumna);
-
-            for (int i = 0; i < elementos.Count; i++)
-            {
-                string nombre = Path.GetFileName(elementos[i]);
-                Style.MostrarContenido(nombre, color, anchoColumna);
-                if ((i + 1) % columnas == 0)
-                    Console.WriteLine();
-            }
-            Console.WriteLine();
-        }
+        }     
         #endregion
     }
 }

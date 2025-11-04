@@ -42,14 +42,14 @@ namespace ImageMetadataTools.UI
             MetadataSaver.GuardarEnArchivo(metadata);
             VolverAlMenu();
         }
-
-        //Opcion 3, ingresa carpeta
-        public static void IngresarCarpeta(string ruta)
+        //Pide la ruta al usuario y la procesa
+        public static bool ProcesaImage(ref string rutaActual)
         {
-            //rutaDestino = PedirRuta();
-            //Manage.IniciarExploracion(ruta);
+            string rutaInput = MenuPrincipal.PedirRuta();
+            rutaActual = Path.IsPathRooted(rutaInput) ? rutaInput : Path.Combine(rutaActual, rutaInput);
+            OperMenu.ProcesarImagen(rutaActual);
+            return false;
         }
-
         //Opcion 4, agrupa imagenes
         public static void EjecutarAgrupacion(int subopcion)
         {
@@ -71,13 +71,9 @@ namespace ImageMetadataTools.UI
 
         //Valida que el archivo exista y sea de formato imagen
         public static bool ValidarArchivo(string imagePath)
-        {
-            if (!File.Exists(imagePath))
-            {
-                Style.MostrarError("El archivo no existe. Intente de nuevo.");
-                return false;
-            }
-
+        { 
+            if (Manage.EsRutaValida(imagePath))
+            {           
             string ext = Path.GetExtension(imagePath).ToLowerInvariant();
             string[] extensionesValidas = [".jpg", ".jpeg", ".png", ".bmp", ".tiff"];
 
@@ -86,8 +82,8 @@ namespace ImageMetadataTools.UI
                 Style.MostrarError("Formato no soportado. Use JPG, PNG, BMP o TIFF.");
                 return false;
             }
-
-            return true;
+            }
+            return true;            
         }
         #endregion
 
@@ -140,6 +136,7 @@ namespace ImageMetadataTools.UI
         {
             Style.MostrarComentarios("\nPresione cualquier tecla para volver al menú...",ConsoleColor.White);
             Console.ReadKey();
+
         }
         #endregion
     }
