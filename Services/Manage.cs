@@ -37,7 +37,7 @@ namespace ImageMetadataTools.Services
         #endregion
 
         #region Private Methods
-        private static void MostrarContenidoCarpeta(string ruta)
+        public static void MostrarContenidoCarpeta(string ruta)
         {
             var imagenes = ObtenerImagenesValidas(ruta);
             var carpetas = ObtenerSubcarpetas(ruta);
@@ -144,7 +144,7 @@ namespace ImageMetadataTools.Services
         }
 
         // Obtiene las imágenes válidas en la carpeta.
-        private static List<string> ObtenerImagenesValidas(string ruta)
+        public static List<string> ObtenerImagenesValidas(string ruta)
         {
             return [.. Directory.GetFiles(ruta).Where(UI.OperMenu.ValidarArchivo)];
         }
