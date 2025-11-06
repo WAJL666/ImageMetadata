@@ -18,12 +18,7 @@ namespace ImageMetadataTools.UI
             do
             {
                 Style.MostrarMenu();
-
-                if (!int.TryParse(Console.ReadLine(), out option))
-                {
-                    Style.MostrarError("Entrada inválida. Debe ser un número.");
-                    continue;
-                }
+                option = Style.LeerOpcion();
 
                 switch (option)
                 {
@@ -52,11 +47,16 @@ namespace ImageMetadataTools.UI
 
             } while (option != 5);
         }
-        #endregion
 
-        #region Private Methods
+        // Solicita al usuario que ingrese una ruta de archivo o carpeta.
+        public static string PedirRuta()
+        {
+            Style.MostrarComentarios("\nIngrese la ruta completa o nombre del archivo o carpeta.", ConsoleColor.Yellow);
+            return Console.ReadLine().Trim('"');
+        }
+
         // Procesa la opción 3 seleccionada en el menú de navegación.
-        private static bool ProcesarOpcion(int opcion, ref string rutaActual)
+        public static bool ProcesarOpcion(int opcion, ref string rutaActual)
         {
             switch (opcion)
             {
@@ -67,7 +67,7 @@ namespace ImageMetadataTools.UI
                 case 3:
                     return Manage.NavegarAdelante(ref rutaActual);
                 case 4:
-                   return OperMenu.ProcesaImage(ref rutaActual);                    
+                    return OperMenu.ProcesaImage(ref rutaActual);
                 case 5:
                     return false;
                 default:
@@ -75,37 +75,21 @@ namespace ImageMetadataTools.UI
                     return true;
             }
         }
+        #endregion
 
-     
-
-        // Inicia la navegación por carpetas.
+        #region Private Methods
+        // Inicia el proceso de navegación de carpetas.
         private static void IniciarNavegacion()
         {
             string rutaActual = PedirRuta();
 
-            if (!Directory.Exists(rutaActual))
+            if (!Manage.EsRutaValida(rutaActual))
             {
-                Style.MostrarError("La ruta no existe.");
+                Style.MostrarError("La carpeta no existe. Intente de nuevo.");
                 return;
             }
 
-            Manage.HistorialAtras.Clear();
-            Manage.HistorialAdelante.Clear();
-
-            bool continuar = true;
-            while (continuar)
-            {
-                Manage.MostrarContenidoCarpeta(rutaActual);
-                int opcion = Style.MostrarMenuNavegar();
-                continuar = ProcesarOpcion(opcion, ref rutaActual);
-            }
-        }
-
-        // Solicita al usuario que ingrese una ruta de archivo o carpeta.
-        public  static string PedirRuta()
-        {
-            Style.MostrarComentarios("\nIngrese la ruta completa o nombre del archivo o carpeta.", ConsoleColor.Yellow);
-            return Console.ReadLine().Trim('"');
+            Manage.Navegar(rutaActual);
         }
         #endregion
     }

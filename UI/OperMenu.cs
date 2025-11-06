@@ -42,6 +42,7 @@ namespace ImageMetadataTools.UI
             MetadataSaver.GuardarEnArchivo(metadata);
             VolverAlMenu();
         }
+
         //Pide la ruta al usuario y la procesa
         public static bool ProcesaImage(ref string rutaActual)
         {
@@ -50,6 +51,7 @@ namespace ImageMetadataTools.UI
             OperMenu.ProcesarImagen(rutaActual);
             return false;
         }
+
         //Opcion 4, agrupa imagenes
         public static void EjecutarAgrupacion(int subopcion)
         {
@@ -84,6 +86,16 @@ namespace ImageMetadataTools.UI
             }
             }
             return true;            
+        }
+
+        //Muestra un listado en columnas
+        public static void MostrarListado(List<string> elementos, ConsoleColor color)
+        {
+            if (elementos == null || elementos.Count == 0)
+                return;
+
+            int columnas = Style.CalcularColumnas(elementos);
+            Style.MostrarEnColumnas(elementos, color, columnas);
         }
         #endregion
 
@@ -136,7 +148,6 @@ namespace ImageMetadataTools.UI
         {
             Style.MostrarComentarios("\nPresione cualquier tecla para volver al menú...",ConsoleColor.White);
             Console.ReadKey();
-
         }
         #endregion
     }

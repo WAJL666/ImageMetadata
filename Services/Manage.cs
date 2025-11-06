@@ -17,15 +17,12 @@ namespace ImageMetadataTools.Services
         #endregion
 
         #region Public Methods
-       
-        #endregion
-
-        #region Private Methods
+        // Muestra el contenido de la carpeta actual.
         public static void MostrarContenidoCarpeta(string ruta)
         {
             var imagenes = ObtenerImagenesValidas(ruta);
             var carpetas = ObtenerSubcarpetas(ruta);
-           
+
 
             Style.MostrarTitulo(ruta, ConsoleColor.Green);
             Style.MostrarComentarios($"Imágenes encontradas: {imagenes.Count}", ConsoleColor.White);
@@ -35,13 +32,11 @@ namespace ImageMetadataTools.Services
                 Style.MostrarError("No se encontraron imágenes en la carpeta.");
 
             Style.MostrarLinea(ConsoleColor.Green);
-            Style.MostrarListado(imagenes, ConsoleColor.Green);
-            Style.MostrarListado(carpetas, ConsoleColor.Magenta);
+            OperMenu.MostrarListado(imagenes, ConsoleColor.Green);
+            OperMenu.MostrarListado(carpetas, ConsoleColor.Magenta);
         }
 
         // Navega a una subcarpeta dentro de la ruta actual.
-       
-
         public static bool NavegarASubcarpeta(ref string rutaActual)
         {
             Style.MostrarComentarios("\nIngrese nombre de la subcarpeta:", ConsoleColor.Cyan);
@@ -94,31 +89,43 @@ namespace ImageMetadataTools.Services
             rutaActual = HistorialAdelante.Pop();
             return true;
         }
+
+        // Inicia la navegación desde una ruta inicial.
+        public static void Navegar(string rutaInicial)
+        {
+            HistorialAtras.Clear();
+            HistorialAdelante.Clear();
+
+            string rutaActual = rutaInicial;
+            bool continuar = true;
+
+            while (continuar)
+            {
+                MostrarContenidoCarpeta(rutaActual);
+                int opcion = Style.MostrarMenuNavegar();
+                continuar = MenuPrincipal.ProcesarOpcion(opcion, ref rutaActual);
+            }
+        }
+
+        // Verifica si la ruta es válida.
+        public static bool EsRutaValida(string ruta)
+        {
+            return Directory.Exists(ruta);
+        }
         #endregion
 
         #region Private Methods
-        // Verifica si la ruta de la carpeta es válida.
-        public static bool EsRutaValida(string ruta)
-        {
-            if (!Directory.Exists(ruta))
-            {
-                Style.MostrarError("La carpeta no existe. Intente de nuevo.");
-                return false;
-            }
-            return true;
-        }
-
-        // Obtiene las imágenes válidas en la carpeta.
-        public static List<string> ObtenerImagenesValidas(string ruta)
-        {
-            return [.. Directory.GetFiles(ruta).Where(UI.OperMenu.ValidarArchivo)];
-        }
-
         // Obtiene las subcarpetas en la carpeta.
         private static List<string> ObtenerSubcarpetas(string ruta)
         {
             return [.. Directory.GetDirectories(ruta)];
-        }     
+        }
+
+        // Obtiene las imágenes válidas en la carpeta.
+        private static List<string> ObtenerImagenesValidas(string ruta)
+        {
+            return [.. Directory.GetFiles(ruta).Where(UI.OperMenu.ValidarArchivo)];
+        }
         #endregion
     }
 }
