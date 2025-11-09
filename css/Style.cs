@@ -3,7 +3,7 @@
     public static class Style
     {
         // Muestra el menú principal con opciones
-        public static void MostrarMenu()
+        public static int MostrarMenu()
         {
             int ancho = Console.WindowWidth;
 
@@ -11,7 +11,7 @@
 
             if (ancho >= 120)
             {
-                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Navegar. ║ 4. Agrupar Imágenes. ║ 5. Salir.  ║");
+                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Navegar. ║ 4. Agrupar Imágenes. ║ 5. Salir.           ║");
             }
             else
             {
@@ -23,7 +23,7 @@
             }
 
             Console.WriteLine("╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.Write("\nSeleccione una opción: ");
+            return LeerOpcion();
         }
 
         // Muestra el submenú para agrupar imágenes
@@ -33,7 +33,6 @@
             Console.WriteLine("║ 1. Agrupar por fecha.                                                                                            ║");
             Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                   ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.Write("\nSeleccione una opción: ");
             return LeerOpcion();
         }
 
@@ -43,17 +42,18 @@
             Console.WriteLine("\n╔═════════════════════════════════════ Navegar Carpeta ════════════════════════════════════════════════════════════╗");
             Console.WriteLine("║ 1. Ir a subcarpeta ║ 2. Atrás ║ 3. Siguiente ║ 4. Procesar Imagen ║ 5. Salir                                     ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.Write("\nSeleccione una opción: ");
             return LeerOpcion();
         }
 
         // Lee y valida la opción ingresada por el usuario
         public static int LeerOpcion()
         {
+            Console.Write("\nSeleccione una opción: ");
+
             if (int.TryParse(Console.ReadLine(), out int opcion))
                 return opcion;
 
-            MostrarError("Entrada inválida. Debe ser un número.");
+            MostrarComentarios("Entrada inválida. Debe ser un número.", ConsoleColor.Red);
             return -1;
         }
 
@@ -62,39 +62,33 @@
         {
             int anchoConsola = Math.Max(40, Console.WindowWidth);
             Console.ForegroundColor = color;
-            Console.WriteLine(new string('─', anchoConsola));
+            Console.WriteLine(new string('=', anchoConsola));
             Console.ResetColor();
         }
 
         // Muestra un título centrado con el color especificado
-        public static void MostrarTitulo(string titulo, ConsoleColor color)
+        public static void MostrarTitulo(string texto, ConsoleColor color)
         {
+            int ancho = Console.WindowWidth;
+            int margen = Math.Max((ancho - texto.Length) / 2, 0);
+
             Console.ForegroundColor = color;
             Console.WriteLine();
-            MostrarLinea(color);
-            Console.ResetColor();
-
-            int ancho = Console.WindowWidth;
-            int margen = Math.Max(0, (ancho - titulo.Length) / 2);
-            Console.WriteLine(new string(' ', margen) + titulo);
 
             MostrarLinea(color);
+
+            Console.WriteLine(new string(' ', margen) + texto);
+
+            MostrarLinea(color);
+
             Console.ResetColor();
         }
 
-        // Muestra un mensaje de error en color rojo
-        public static void MostrarError(string mensaje)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(mensaje);
-            Console.ResetColor();
-        }
-
-        // Muestra un comentario con el color especificado
+        //Muestra un comentario con el color especificado
         public static void MostrarComentarios(string mensaje, ConsoleColor color)
         {
             Console.ForegroundColor = color;
-            Console.WriteLine(mensaje);
+            Console.WriteLine($"• {mensaje}");
             Console.ResetColor();
         }
 

@@ -29,7 +29,7 @@ namespace ImageMetadataTools.Services
             Style.MostrarLinea(ConsoleColor.Green);
 
             if (imagenes.Count == 0)
-                Style.MostrarError("No se encontraron imágenes en la carpeta.");
+                Style.MostrarComentarios("No se encontraron imágenes en la carpeta.", ConsoleColor.Red);
 
             Style.MostrarLinea(ConsoleColor.Green);
             OperMenu.MostrarListado(imagenes, ConsoleColor.Green);
@@ -44,7 +44,7 @@ namespace ImageMetadataTools.Services
 
             if (string.IsNullOrWhiteSpace(nombre))
             {
-                Style.MostrarError("Nombre vacío.");
+                Style.MostrarComentarios("Nombre vacío.", ConsoleColor.Red);
                 return true;
             }
 
@@ -52,7 +52,7 @@ namespace ImageMetadataTools.Services
 
             if (!EsRutaValida(nuevaRuta))
             {
-                Style.MostrarError("La carpeta no existe.");
+                Style.MostrarComentarios("La carpeta no existe.", ConsoleColor.Red);
                 return true;
             }
 
@@ -67,7 +67,7 @@ namespace ImageMetadataTools.Services
         {
             if (HistorialAtras.Count == 0)
             {
-                Style.MostrarError("No hay carpeta anterior.");
+                Style.MostrarComentarios("No hay carpeta anterior.", ConsoleColor.Red);
                 return true;
             }
             Style.LimpiarPantalla();
@@ -81,7 +81,7 @@ namespace ImageMetadataTools.Services
         {
             if (HistorialAdelante.Count == 0)
             {
-                Style.MostrarError("No hay carpeta siguiente.");
+                Style.MostrarComentarios("No hay carpeta siguiente.", ConsoleColor.Red);
                 return true;
             }
             Style.LimpiarPantalla();
