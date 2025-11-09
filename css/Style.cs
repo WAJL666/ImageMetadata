@@ -3,7 +3,7 @@
     public static class Style
     {
         // Muestra el menú principal con opciones
-        public static void MostrarMenu()
+        public static int MostrarMenu()
         {
             int ancho = Console.WindowWidth;
 
@@ -11,7 +11,7 @@
 
             if (ancho >= 120)
             {
-                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Navegar. ║ 4. Agrupar Imágenes. ║ 5. Salir.  ║");
+                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Navegar. ║ 4. Agrupar Imágenes. ║ 5. Salir.           ║");
             }
             else
             {
@@ -23,7 +23,7 @@
             }
 
             Console.WriteLine("╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.Write("\nSeleccione una opción: ");
+            return LeerOpcion();
         }
 
         // Muestra el submenú para agrupar imágenes
@@ -33,7 +33,6 @@
             Console.WriteLine("║ 1. Agrupar por fecha.                                                                                            ║");
             Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                   ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.Write("\nSeleccione una opción: ");
             return LeerOpcion();
         }
 
@@ -43,15 +42,18 @@
             Console.WriteLine("\n╔═════════════════════════════════════ Navegar Carpeta ════════════════════════════════════════════════════════════╗");
             Console.WriteLine("║ 1. Ir a subcarpeta ║ 2. Atrás ║ 3. Siguiente ║ 4. Procesar Imagen ║ 5. Salir                                     ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.Write("\nSeleccione una opción: ");
             return LeerOpcion();
         }
 
         // Lee y valida la opción ingresada por el usuario
-        private static int LeerOpcion()
+        public static int LeerOpcion()
         {
+            Console.Write("\nSeleccione una opción: ");
+
             if (int.TryParse(Console.ReadLine(), out int opcion))
                 return opcion;
+
+            MostrarComentarios("Entrada inválida. Debe ser un número.", ConsoleColor.Red);
             return -1;
         }
 
@@ -60,70 +62,82 @@
         {
             int anchoConsola = Math.Max(40, Console.WindowWidth);
             Console.ForegroundColor = color;
-            Console.WriteLine(new string('─', anchoConsola));
+            Console.WriteLine(new string('=', anchoConsola));
             Console.ResetColor();
         }
 
         // Muestra un título centrado con el color especificado
-        public static void MostrarTitulo(string titulo, ConsoleColor color)
+        public static void MostrarTitulo(string texto, ConsoleColor color)
         {
+            int ancho = Console.WindowWidth;
+            int margen = Math.Max((ancho - texto.Length) / 2, 0);
+
             Console.ForegroundColor = color;
             Console.WriteLine();
-            MostrarLinea(color);
-            Console.ResetColor();
-
-            int ancho = Console.WindowWidth;
-            int margen = Math.Max(0, (ancho - titulo.Length) / 2);
-            Console.WriteLine(new string(' ', margen) + titulo);
 
             MostrarLinea(color);
+
+            Console.WriteLine(new string(' ', margen) + texto);
+
+            MostrarLinea(color);
+
             Console.ResetColor();
         }
 
-        // Muestra un mensaje de error en color rojo
-        public static void MostrarError(string mensaje)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(mensaje);
-            Console.ResetColor();
-        }
-
-        // Muestra un comentario con el color especificado
+        //Muestra un comentario con el color especificado
         public static void MostrarComentarios(string mensaje, ConsoleColor color)
         {
             Console.ForegroundColor = color;
-            Console.WriteLine(mensaje);
+            Console.WriteLine($"• {mensaje}");
             Console.ResetColor();
         }
 
-        // Muestra contenido con el color y ancho de columna especificados
-        public static void MostrarContenido(string nombre, ConsoleColor color, int anchoColumna)
+        // Calcula el número de columnas que se pueden mostrar en la consola
+        public static int CalcularColumnas(List<string> elementos, int margen = 2)
         {
-            Console.ForegroundColor = color;
-            Console.Write(string.Format("{0,-" + anchoColumna + "}", nombre));
-            Console.ResetColor();
+            if (elementos == null || elementos.Count == 0)
+                return 1;
+
+            int anchoMax = elementos.Select(e => Path.GetFileName(e).Length).Max();
+            int anchoColumna = anchoMax + margen;
+            int anchoConsola = Console.WindowWidth;
+
+            return Math.Max(1, anchoConsola / anchoColumna);
         }
 
-        // Muestra una lista de elementos en columnas.
-        public static void MostrarListado(List<string> elementos, ConsoleColor color)
+        // Muestra una lista de elementos en columnas
+        public static void MostrarEnColumnas(List<string> elementos, ConsoleColor color, int columnas)
         {
             if (elementos == null || elementos.Count == 0)
                 return;
 
-            int anchoMax = elementos.Select(e => Path.GetFileName(e).Length).Max();
-            int anchoColumna = anchoMax + 2;
-            int anchoConsola = Console.WindowWidth;
-            int columnas = Math.Max(1, anchoConsola / anchoColumna);
+            int anchoColumna = elementos.Select(e => Path.GetFileName(e).Length).Max() + 2;
 
             for (int i = 0; i < elementos.Count; i++)
             {
                 string nombre = Path.GetFileName(elementos[i]);
-                Style.MostrarContenido(nombre, color, anchoColumna);
+                MostrarContenido(nombre, color, anchoColumna);
+
                 if ((i + 1) % columnas == 0)
                     Console.WriteLine();
             }
             Console.WriteLine();
         }
+
+        // Muestra contenido con alineación y color especificados
+        public static void MostrarContenido(string texto, ConsoleColor color, int ancho, bool alinearIzquierda = true)
+        {
+            if (string.IsNullOrEmpty(texto))
+                texto = string.Empty;
+
+            string alineado = alinearIzquierda ? texto.PadRight(ancho) : texto.PadLeft(ancho);
+
+            Console.ForegroundColor = color;
+            Console.Write(alineado);
+            Console.ResetColor();
+        }
+
+        // Limpia la pantalla de la consola
         public static void LimpiarPantalla()
         {
             Console.Clear();

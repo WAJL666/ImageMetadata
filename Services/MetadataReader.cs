@@ -9,11 +9,12 @@ namespace ImageMetadataTools.Services
 {
     public class MetadataReader
     {
+        // Método principal para obtener los metadatos de una imagen.
         public static MetadataInfo? GetMetadata(string imagePath)
         {
             if (!File.Exists(imagePath))
             {
-                Style.MostrarError("No se encontró la imagen. Verifique la ruta e intente nuevamente.");
+                Style.MostrarComentarios("No se encontró la imagen. Verifique la ruta e intente nuevamente.", ConsoleColor.Red);
                 return null;
             }
 
@@ -29,13 +30,13 @@ namespace ImageMetadataTools.Services
             }
             catch (OutOfMemoryException ex)
             {
-                Style.MostrarError("El archivo no es una imagen válida o está corrupto.");
+                Style.MostrarComentarios("El archivo no es una imagen válida o está corrupto.", ConsoleColor.Red);
                 Console.WriteLine(ex.Message);
                 return null;
             }
             catch (Exception ex)
             {
-                Style.MostrarError("Ocurrió un error inesperado al procesar la imagen.");
+                Style.MostrarComentarios("Ocurrió un error inesperado al procesar la imagen.", ConsoleColor.Red);
                 Console.WriteLine(ex.Message);
                 return null;
             }

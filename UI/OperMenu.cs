@@ -18,14 +18,11 @@ namespace ImageMetadataTools.UI
             if (!ValidarArchivo(ruta)) return;
 
             metadata = MetadataReader.GetMetadata(ruta);
+
             if (metadata != null)
-            {
                 MostrarMetadatos(metadata);
-            }
             else
-            {
-                Style.MostrarError("No se pudieron leer los metadatos EXIF.");
-            }
+                Style.MostrarComentarios("No se pudieron leer los metadatos EXIF.", ConsoleColor.Red);
 
             VolverAlMenu();
         }
@@ -35,38 +32,21 @@ namespace ImageMetadataTools.UI
         {
             if (metadata == null)
             {
-                Style.MostrarError("No hay metadatos para guardar. Procese una imagen primero.");
+                Style.MostrarComentarios("No hay metadatos para guardar. Procese una imagen primero.", ConsoleColor.Red);
                 return;
             }
 
             MetadataSaver.GuardarEnArchivo(metadata);
             VolverAlMenu();
         }
+
         //Pide la ruta al usuario y la procesa
         public static bool ProcesaImage(ref string rutaActual)
         {
             string rutaInput = MenuPrincipal.PedirRuta();
             rutaActual = Path.IsPathRooted(rutaInput) ? rutaInput : Path.Combine(rutaActual, rutaInput);
-            OperMenu.ProcesarImagen(rutaActual);
+            ProcesarImagen(rutaActual);
             return false;
-        }
-        //Opcion 4, agrupa imagenes
-        public static void EjecutarAgrupacion(int subopcion)
-        {
-            switch (subopcion)
-            {
-                case 1:
-                    Style.MostrarComentarios("\nAgrupando imágenes por fecha", ConsoleColor.Green);
-                    break;
-                case 2:
-                    Style.MostrarComentarios("\nAgrupando imágenes por lugar", ConsoleColor.Green);
-                    break;
-                default:
-                    Style.MostrarError("Opción no válida en el submenú.");
-                    break;
-            }
-
-            VolverAlMenu();
         }
 
         //Valida que el archivo exista y sea de formato imagen
@@ -74,16 +54,26 @@ namespace ImageMetadataTools.UI
         { 
             if (Manage.EsRutaValida(imagePath))
             {           
-            string ext = Path.GetExtension(imagePath).ToLowerInvariant();
-            string[] extensionesValidas = [".jpg", ".jpeg", ".png", ".bmp", ".tiff"];
+                string ext = Path.GetExtension(imagePath).ToLowerInvariant();
+                string[] extensionesValidas = [".jpg", ".jpeg", ".png", ".bmp", ".tiff"];
 
-            if (!extensionesValidas.Contains(ext))
-            {
-                Style.MostrarError("Formato no soportado. Use JPG, PNG, BMP o TIFF.");
-                return false;
-            }
+                if (!extensionesValidas.Contains(ext))
+                {
+                    Style.MostrarComentarios("Formato no soportado. Use JPG, PNG, BMP o TIFF.", ConsoleColor.Red);
+                    return false;
+                }
             }
             return true;            
+        }
+
+        //Muestra un listado en columnas
+        public static void MostrarListado(List<string> elementos, ConsoleColor color)
+        {
+            if (elementos == null || elementos.Count == 0)
+                return;
+
+            int columnas = Style.CalcularColumnas(elementos);
+            Style.MostrarEnColumnas(elementos, color, columnas);
         }
         #endregion
 
@@ -136,7 +126,7 @@ namespace ImageMetadataTools.UI
         {
             Style.MostrarComentarios("\nPresione cualquier tecla para volver al menú...",ConsoleColor.White);
             Console.ReadKey();
-
+            Console.Clear();
         }
         #endregion
     }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ImageMetadataTools.UI
+﻿namespace ImageMetadataTools.UI
 {
-    internal class Navegar
+    public class Navegar
     {
     }
 }
