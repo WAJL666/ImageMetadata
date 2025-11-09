@@ -2,5 +2,9 @@
 {
     public class Navegar
     {
+        public static void AgruparPorFecha()
+        {
+
+        }
     }
 }

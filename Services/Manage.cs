@@ -23,7 +23,6 @@ namespace ImageMetadataTools.Services
             var imagenes = ObtenerImagenesValidas(ruta);
             var carpetas = ObtenerSubcarpetas(ruta);
 
-
             Style.MostrarTitulo(ruta, ConsoleColor.Green);
             Style.MostrarComentarios($"Imágenes encontradas: {imagenes.Count}", ConsoleColor.White);
             Style.MostrarLinea(ConsoleColor.Green);
@@ -96,14 +95,13 @@ namespace ImageMetadataTools.Services
             HistorialAtras.Clear();
             HistorialAdelante.Clear();
 
-            string rutaActual = rutaInicial;
             bool continuar = true;
 
             while (continuar)
             {
-                MostrarContenidoCarpeta(rutaActual);
+                MostrarContenidoCarpeta(rutaInicial);
                 int opcion = Style.MostrarMenuNavegar();
-                continuar = MenuPrincipal.ProcesarOpcion(opcion, ref rutaActual);
+                continuar = MenuPrincipal.ProcesarOpcion(opcion, ref rutaInicial);
             }
         }
 

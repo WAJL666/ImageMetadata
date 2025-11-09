@@ -32,7 +32,8 @@ namespace ImageMetadataTools.UI
                         break;
                     case 3:
                         Console.Clear();
-                        IniciarNavegacion();
+                        rutaDestino = PedirRuta();
+                        IniciarNavegacion(rutaDestino);
                         break;
                     case 4:
                         Console.Clear();
@@ -88,17 +89,15 @@ namespace ImageMetadataTools.UI
 
         #region Private Methods
         // Inicia el proceso de navegación de carpetas.
-        private static void IniciarNavegacion()
+        private static void IniciarNavegacion(string ruta)
         {
-            string rutaActual = PedirRuta();
-
-            if (!Manage.EsRutaValida(rutaActual))
+            if (!Manage.EsRutaValida(ruta))
             {
                 Style.MostrarComentarios("La carpeta no existe. Intente de nuevo.", ConsoleColor.Red);
                 return;
             }
 
-            Manage.Navegar(rutaActual);
+            Manage.Navegar(ruta);
         }
 
         // Ejecuta la acción de agrupación según la subopción seleccionada.
