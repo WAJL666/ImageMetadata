@@ -120,7 +120,7 @@ namespace ImageMetadataTools.Services
         }
 
         // Obtiene las imágenes válidas en la carpeta.
-        private static List<string> ObtenerImagenesValidas(string ruta)
+        public static List<string> ObtenerImagenesValidas(string ruta)
         {
             return [.. Directory.GetFiles(ruta).Where(UI.OperMenu.ValidarArchivo)];
         }

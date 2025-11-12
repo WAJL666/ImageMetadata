@@ -60,14 +60,24 @@ namespace ImageMetadataTools.UI
             Style.MostrarComentarios("\nIngrese la ruta completa o nombre del archivo o carpeta.", ConsoleColor.Yellow);
             return Console.ReadLine().Trim('"');
         }
+        //public static string IngresoCombinado()
+        //{
+        //    Style.MostrarComentarios("\nIngrese nombre carpeta.", ConsoleColor.Yellow);
+        //    rutaDestino = Console.ReadLine().Trim('"');
+        //    if (rutaDestino[1] == '1') { 
+        //    rutaDestino =rutaDestino.Trim('1');
+        //     return rutaDestino;
+        //    }
+        //    style.MostrarComentarios("\nIngrese ruta completa.", ConsoleColor.Yellow);
 
+        //}   
         // Procesa la opción 3 seleccionada en el menú de navegación.
         public static bool ProcesarOpcion(int opcion, ref string rutaActual)
         {
             switch (opcion)
             {
                 case 1:
-                    Console.Clear();
+                    //Console.Clear();
                     return Manage.NavegarASubcarpeta(ref rutaActual);
                 case 2:
                     Console.Clear();
@@ -107,6 +117,7 @@ namespace ImageMetadataTools.UI
             {
                 case 1:
                     Style.MostrarComentarios("\nAgrupando imágenes por fecha", ConsoleColor.Green);
+                    Agrupar.AgruparPorFecha();
                     break;
                 case 2:
                     Style.MostrarComentarios("\nAgrupando imágenes por lugar", ConsoleColor.Green);

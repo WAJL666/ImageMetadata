@@ -13,6 +13,7 @@ crear carpeta.
 mover archivos.
 eliminar archivos.
 
- D:\imagenes\Fotos\Fotos\Emily.JPG
+D:\imagenes\Fotos\Fotos\Emily.JPG
+D:\imagenes\Fotos\Fotos\obejas - copia
 
  */
