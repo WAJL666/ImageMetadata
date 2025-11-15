@@ -116,8 +116,9 @@ namespace ImageMetadataTools.UI
             switch (subopcion)
             {
                 case 1:
-                    Style.MostrarComentarios("\nAgrupando imágenes por fecha", ConsoleColor.Green);
-                    Agrupar.AgruparPorFecha();
+                    Console.Clear();
+                    rutaDestino = PedirRuta();
+                    Agrupar.AgruparPorAño(rutaDestino);
                     break;
                 case 2:
                     Style.MostrarComentarios("\nAgrupando imágenes por lugar", ConsoleColor.Green);
