@@ -51,7 +51,7 @@ namespace ImageMetadataTools.Services
                                  .Where(EsImagenValida)
                                  .ToList();
 
-            var gruposPorAño = AgruparPorFechaModificacion(imagenes, ruta);
+            var gruposPorAño = AgruparPorFecha(imagenes, ruta);
 
             ProcesarGruposPorAño(gruposPorAño, ruta);
 
@@ -67,23 +67,23 @@ namespace ImageMetadataTools.Services
             {
                 MostrarResumenDeGrupo(grupo.Key, grupo.Value);
 
-                if (ConfirmarAccion($"¿Deseas mover todas las imágenes del año {grupo.Key}?"))
-                    MoverGrupoDeImagenes(grupo.Value, rutaBase, grupo.Key);
+                if (Confirmar($"¿Deseas mover todas las imágenes del año {grupo.Key}?"))
+                    MoverImagenes(grupo.Value, rutaBase, grupo.Key);
 
-                if (ConfirmarAccion($"¿Deseas guardar los metadatos del grupo {grupo.Key}?"))
-                    GuardarMetadatosDelGrupo(grupo.Value);
+                if (Confirmar($"¿Deseas guardar los metadatos del grupo {grupo.Key}?"))
+                    GuardarMetadatos(grupo.Value);
             }
         }
 
         // Agrupa las imágenes según su año de modificación
-        private static Dictionary<string, List<string>> AgruparPorFechaModificacion(List<string> imagenes, string rutaBase)
+        private static Dictionary<string, List<string>> AgruparPorFecha(List<string> imagenes, string rutaBase)
         {
             var grupos = new Dictionary<string, List<string>>();
 
             foreach (var foto in imagenes)
             {
                 string rutaCompleta = Path.Combine(rutaBase, Path.GetFileName(foto));
-                string año = ObtenerAñoPorFechaModificacion(rutaCompleta);
+                string año = ObtenerAño(rutaCompleta);
 
                 if (!grupos.TryGetValue(año, out List<string>? value))
                 {
@@ -98,7 +98,7 @@ namespace ImageMetadataTools.Services
         }
 
         // Obtiene el año de la fecha de modificación del archivo
-        private static string ObtenerAñoPorFechaModificacion(string rutaCompleta)
+        private static string ObtenerAño(string rutaCompleta)
         {
             if (File.Exists(rutaCompleta))
             {
@@ -135,7 +135,7 @@ namespace ImageMetadataTools.Services
         }
 
         // Confirma una acción con el usuario
-        private static bool ConfirmarAccion(string mensaje)
+        private static bool Confirmar(string mensaje)
         {
             Style.MostrarComentarios($"\n{mensaje} (S/N): ", ConsoleColor.Yellow);
             string? respuesta = Console.ReadLine()?.Trim().ToUpper();
@@ -143,7 +143,7 @@ namespace ImageMetadataTools.Services
         }
 
         // Mueve el grupo de imágenes a la carpeta correspondiente al año
-        private static void MoverGrupoDeImagenes(List<string> imagenes, string rutaBase, string año)
+        private static void MoverImagenes(List<string> imagenes, string rutaBase, string año)
         {
             string carpetaDestino = Path.Combine(rutaBase, año);
 
@@ -168,7 +168,7 @@ namespace ImageMetadataTools.Services
         }
 
         // Guarda los metadatos de cada imagen en el grupo
-        private static void GuardarMetadatosDelGrupo(List<string> imagenes)
+        private static void GuardarMetadatos(List<string> imagenes)
         {
             foreach (var foto in imagenes)
             {
