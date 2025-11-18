@@ -7,22 +7,20 @@
         {
             int ancho = Console.WindowWidth;
 
-            Console.WriteLine("\n╔═════════════════════════════════════════════ Lector De Metadatos ═════════════════════════════════════════════════╗");
+            Console.WriteLine("\n╔══════════════ Lector De Metadatos ═════════════════╗");
 
             if (ancho >= 120)
             {
-                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Guardar metadatos en archivo. ║ 3. Navegar. ║ 4. Agrupar Imágenes. ║ 5. Salir.           ║");
+                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Navegar. ║ 3. Salir.      ║");
             }
             else
             {
-                Console.WriteLine("║ 1. Procesar imagen.              ║");
-                Console.WriteLine("║ 2. Guardar metadatos en archivo. ║");
-                Console.WriteLine("║ 3. Buscar Carpeta.               ║");
-                Console.WriteLine("║ 4. Agrupar imágenes.             ║");
-                Console.WriteLine("║ 5. Salir.                        ║");
+                Console.WriteLine("║ 1. Procesar imagen.     ║");
+                Console.WriteLine("║ 2. Navegar.             ║");
+                Console.WriteLine("║ 3. Salir .              ║");
             }
 
-            Console.WriteLine("╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.WriteLine("╚════════════════════════════════════════════════════╝");
             return LeerOpcion();
         }
 
@@ -32,6 +30,7 @@
             Console.WriteLine("\n╔═════════════════════════════════════ Agrupar Imágenes ═══════════════════════════════════════════════════════════╗");
             Console.WriteLine("║ 1. Agrupar por fecha.                                                                                            ║");
             Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                   ║");
+            Console.WriteLine("║ 3. Menú anterior.");
             Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
             return LeerOpcion();
         }
@@ -39,16 +38,16 @@
         // Muestra el submenú para navegar carpetas
         public static int MostrarMenuNavegar()
         {
-            Console.WriteLine("\n╔═════════════════════════════════════ Navegar Carpeta ════════════════════════════════════════════════════════════╗");
-            Console.WriteLine("║ 1. Ir a subcarpeta ║ 2. Atrás ║ 3. Siguiente ║ 4. Procesar Imagen ║ 5. Salir                                     ║");
-            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.WriteLine("\n╔═════════════════════════════════════ Navegar Carpeta ════════════════════════════════════════════╗");
+            Console.WriteLine("║ 1. Ir a subcarpeta ║ 2. Atrás ║ 3. Siguiente ║ 4. Procesar Imagen ║ 5. Agrupar ║ 6. Salir        ║");
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════╝");
             return LeerOpcion();
         }
 
         // Lee y valida la opción ingresada por el usuario
         public static int LeerOpcion()
         {
-            Console.Write("\nSeleccione una opción: ");
+            Console.Write("Seleccione una opción: ");
 
             if (int.TryParse(Console.ReadLine(), out int opcion))
                 return opcion;
@@ -144,13 +143,3 @@
         }
     }
 }
-
-/*
- 1. Mostrar menu principal.
- 2. Aplicar color a la linea. 
-    2.1 Aplicar color.
-    2.2 Resetear color.
- 3. Recibe mensaje y aplicar color al titulo.
- 4. Recibe mensaje y aplica color al error.
- 5. Recibe mensaje y color para mostrar comentarios en diferentes colores.
- */

@@ -106,7 +106,7 @@ namespace ImageMetadataTools.Services
                 return fechaModificacion.Year.ToString();
             }
 
-            return "SinFecha";
+            return "Sin Fecha";
         }
 
         // Verifica si la imagen es válida intentando cargarla

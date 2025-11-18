@@ -20,22 +20,34 @@ namespace ImageMetadataTools.UI
             metadata = MetadataReader.GetMetadata(ruta);
 
             if (metadata != null)
+            {
                 MostrarMetadatos(metadata);
+
+                Style.MostrarComentarios("Procesamiento completado.", ConsoleColor.Green);
+                Style.MostrarComentarios("¿Desea guardar la información en un archivo de texto? (S/N)", ConsoleColor.Green);
+
+                string respuesta = Console.ReadLine()?.Trim() ?? "";
+
+                if (respuesta.Equals("S", StringComparison.OrdinalIgnoreCase))
+                {
+                    GuardarInformacion();
+                }
+                else
+                {
+                    Style.MostrarComentarios("No se guardó el archivo.", ConsoleColor.Red);
+                }
+            }
             else
+            {
                 Style.MostrarComentarios("No se pudieron leer los metadatos EXIF.", ConsoleColor.Red);
+            }
 
             VolverAlMenu();
         }
 
-        //Opcion 2. guarda metadatos en archivo plano txt
+        // guarda metadatos en archivo plano txt
         public static void GuardarInformacion()
         {
-            if (metadata == null)
-            {
-                Style.MostrarComentarios("No hay metadatos para guardar. Procese una imagen primero.", ConsoleColor.Red);
-                return;
-            }
-
             MetadataSaver.GuardarEnArchivo(metadata);
             VolverAlMenu();
         }

@@ -1,4 +1,5 @@
-﻿using ImageMetadataTools.Models;
+﻿using ImageMetadataTools.css;
+using ImageMetadataTools.Models;
 using System.Text;
 
 //Guardar información en archivos 
@@ -12,8 +13,8 @@ namespace ImageMetadataTools.Services
             string rutaTxt = ObtenerRutaDestino(metadata);
             File.WriteAllText(rutaTxt, GenerarTexto(metadata));
 
-            Console.WriteLine($" Metadatos guardados en: {rutaTxt}");
-        }
+            Style.MostrarComentarios($"Éxito.\nMetadatos guardados en: {rutaTxt}", ConsoleColor.Green);
+   }
 
         //saca los metadatos para retornar la información para guadarlo en texto
         private static string? GenerarTexto(MetadataInfo meta)

@@ -28,30 +28,19 @@ namespace ImageMetadataTools.UI
                         break;
                     case 2:
                         Console.Clear();
-                        OperMenu.GuardarInformacion();
-                        break;
-                    case 3:
-                        Console.Clear();
                         rutaDestino = PedirRuta();
                         IniciarNavegacion(rutaDestino);
                         break;
-                    case 4:
-                        Console.Clear();
-                        int subopcion = Style.MostrarMenuAgrupar();
-                        EjecutarAgrupacion(subopcion);
-                        break;
-                    case 5:
+                    case 3:
                         Console.Clear();
                         Style.MostrarComentarios("\nGracias por usar el lector de metadatos. ¡Hasta pronto!", ConsoleColor.Green);
                         Environment.Exit(0);
                         break;
                     default:
-                        Style.MostrarComentarios("Opción inválida. Intente de nuevo.", ConsoleColor.Red);
-                        Console.ReadKey();
+                        Style.LimpiarPantalla();
                         break;
                 }
-
-            } while (option != 5);
+            } while (option != 3);
         }
 
         // Solicita al usuario que ingrese una ruta de archivo o carpeta.
@@ -60,17 +49,7 @@ namespace ImageMetadataTools.UI
             Style.MostrarComentarios("\nIngrese la ruta completa o nombre del archivo o carpeta.", ConsoleColor.Yellow);
             return Console.ReadLine().Trim('"');
         }
-        //public static string IngresoCombinado()
-        //{
-        //    Style.MostrarComentarios("\nIngrese nombre carpeta.", ConsoleColor.Yellow);
-        //    rutaDestino = Console.ReadLine().Trim('"');
-        //    if (rutaDestino[1] == '1') { 
-        //    rutaDestino =rutaDestino.Trim('1');
-        //     return rutaDestino;
-        //    }
-        //    style.MostrarComentarios("\nIngrese ruta completa.", ConsoleColor.Yellow);
-
-        //}   
+        
         // Procesa la opción 3 seleccionada en el menú de navegación.
         public static bool ProcesarOpcion(int opcion, ref string rutaActual)
         {
@@ -89,8 +68,14 @@ namespace ImageMetadataTools.UI
                     Console.Clear();
                     return OperMenu.ProcesaImage(ref rutaActual);
                 case 5:
+                    Console.Clear();
+                    int subopcion = Style.MostrarMenuAgrupar();
+                    EjecutarAgrupacion(subopcion);
+                    return true;
+                case 6:
                     return false;
                 default:
+                    Style.LimpiarPantalla();
                     Style.MostrarComentarios("Opción inválida.", ConsoleColor.Red);
                     return true;
             }
@@ -122,6 +107,9 @@ namespace ImageMetadataTools.UI
                     break;
                 case 2:
                     Style.MostrarComentarios("\nAgrupando imágenes por lugar", ConsoleColor.Green);
+                    break;
+                case 3:
+                    IniciarNavegacion(rutaDestino);
                     break;
                 default:
                     Style.MostrarComentarios("Opción no válida en el submenú.", ConsoleColor.Red);
