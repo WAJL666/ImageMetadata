@@ -2,46 +2,96 @@
 {
     public static class Style
     {
-        // Muestra el menú principal con opciones
+        // Menú principal
         public static int MostrarMenu()
         {
             int ancho = Console.WindowWidth;
+            string titulo = "Lector De Metadatos";
 
-            Console.WriteLine("\n╔══════════════ Lector De Metadatos ═════════════════╗");
+            Console.WriteLine();
+            DibujarLinea(ancho, titulo);
 
-            if (ancho >= 120)
+            string[] opciones = { "1. Procesar Imagen", "2. Navegar", "3. Salir" };
+            DibujarOpciones(ancho, opciones);
+
+            DibujarLinea(ancho);
+
+            return LeerOpcion();
+        }
+
+        // Submenú Agrupar
+        public static int MostrarMenuAgrupar()
+        {
+            int ancho = Console.WindowWidth;
+            string titulo = "Agrupar Imágenes";
+
+            Console.WriteLine();
+            DibujarLinea(ancho, titulo);
+
+            string[] opciones = {
+                "1. Agrupar por fecha",
+                "2. Agrupar por lugar (requiere metadatos GPS)",
+                "3. Menú anterior"
+            };
+            DibujarOpciones(ancho, opciones);
+
+            DibujarLinea(ancho);
+
+            return LeerOpcion();
+        }
+
+        // Submenú Navegar
+        public static int MostrarMenuNavegar()
+        {
+            int ancho = Console.WindowWidth;
+            string titulo = "Navegar Carpeta";
+
+            Console.WriteLine();
+            DibujarLinea(ancho, titulo);
+
+            string[] opciones = {
+                "1. Ir a subcarpeta",
+                "2. Atrás",
+                "3. Siguiente",
+                "4. Procesar Imagen",
+                "5. Agrupar",
+                "6. Salir"
+            };
+            DibujarOpciones(ancho, opciones);
+
+            DibujarLinea(ancho);
+
+            return LeerOpcion();
+        }
+
+        // Dibuja una línea con bordes y un título opcional
+        private static void DibujarLinea(int ancho, string titulo = "")
+        {
+            if (string.IsNullOrEmpty(titulo))
+                Console.WriteLine("╚" + new string('═', ancho - 2) + "╝");
+            else
             {
-                Console.WriteLine("║ 1. Procesar Imagen. ║ 2. Navegar. ║ 3. Salir.      ║");
+                int espacio = (ancho - titulo.Length - 2) / 2;
+                string linea = "╔" + new string('═', espacio) + titulo + new string('═', ancho - titulo.Length - espacio - 2) + "╗";
+                Console.WriteLine(linea);
+            }
+        }
+
+        // Dibuja las opciones del menú
+        private static void DibujarOpciones(int ancho, string[] opciones)
+        {
+            string linea = string.Join(" ║ ", opciones);
+            if (linea.Length + 4 <= ancho)
+            {
+                Console.WriteLine("║ " + linea.PadRight(ancho - 4) + " ║");
             }
             else
             {
-                Console.WriteLine("║ 1. Procesar imagen.     ║");
-                Console.WriteLine("║ 2. Navegar.             ║");
-                Console.WriteLine("║ 3. Salir .              ║");
+                foreach (var opcion in opciones)
+                {
+                    Console.WriteLine("║ " + opcion.PadRight(ancho - 4) + " ║");
+                }
             }
-
-            Console.WriteLine("╚════════════════════════════════════════════════════╝");
-            return LeerOpcion();
-        }
-
-        // Muestra el submenú para agrupar imágenes
-        public static int MostrarMenuAgrupar()
-        {
-            Console.WriteLine("\n╔═════════════════════════════════════ Agrupar Imágenes ═══════════════════════════════════════════════════════════╗");
-            Console.WriteLine("║ 1. Agrupar por fecha.                                                                                            ║");
-            Console.WriteLine("║ 2. Agrupar por lugar (requiere metadatos GPS).                                                                   ║");
-            Console.WriteLine("║ 3. Menú anterior.");
-            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            return LeerOpcion();
-        }
-
-        // Muestra el submenú para navegar carpetas
-        public static int MostrarMenuNavegar()
-        {
-            Console.WriteLine("\n╔═════════════════════════════════════ Navegar Carpeta ════════════════════════════════════════════╗");
-            Console.WriteLine("║ 1. Ir a subcarpeta ║ 2. Atrás ║ 3. Siguiente ║ 4. Procesar Imagen ║ 5. Agrupar ║ 6. Salir        ║");
-            Console.WriteLine("╚══════════════════════════════════════════════════════════════════════════════════════════════════╝");
-            return LeerOpcion();
         }
 
         // Lee y valida la opción ingresada por el usuario
