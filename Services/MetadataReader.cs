@@ -157,11 +157,11 @@ namespace ImageMetadataTools.Services
             return (deg + (min / 60) + (sec / 3600)).ToString("0.######");
         }
 
-          /*
-           GetString         → convierte texto.
-           GetRationalString → convierte fracciones a número legible.
-           GetShort          → convierte valores pequeños a enteros.
-           GetGPS            → convierte coordenadas GPS en grados decimales.
-         */
+        /*
+         GetString         → convierte texto.
+         GetRationalString → convierte fracciones a número legible.
+         GetShort          → convierte valores pequeños a enteros.
+         GetGPS            → convierte coordenadas GPS en grados decimales.
+       */
     }
 }

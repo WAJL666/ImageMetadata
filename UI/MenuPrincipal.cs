@@ -22,17 +22,17 @@ namespace ImageMetadataTools.UI
                 switch (option)
                 {
                     case 1:
-                        Console.Clear();
+                        Style.LimpiarPantalla();
                         rutaDestino = PedirRuta();
                         OperMenu.ProcesarImagen(rutaDestino);
                         break;
                     case 2:
-                        Console.Clear();
+                        Style.LimpiarPantalla();
                         rutaDestino = PedirRuta();
                         IniciarNavegacion(rutaDestino);
                         break;
                     case 3:
-                        Console.Clear();
+                        Style.LimpiarPantalla();
                         Style.MostrarComentarios("\nGracias por usar el lector de metadatos. ¡Hasta pronto!", ConsoleColor.Green);
                         Environment.Exit(0);
                         break;
@@ -56,21 +56,21 @@ namespace ImageMetadataTools.UI
             switch (opcion)
             {
                 case 1:
-                    //Console.Clear();
+                    Style.LimpiarPantalla();
                     return Manage.NavegarASubcarpeta(ref rutaActual);
                 case 2:
-                    Console.Clear();
+                    Style.LimpiarPantalla();
                     return Manage.NavegarAtras(ref rutaActual);
                 case 3:
-                    Console.Clear();
+                    Style.LimpiarPantalla();
                     return Manage.NavegarAdelante(ref rutaActual);
                 case 4:
-                    Console.Clear();
+                    Style.LimpiarPantalla();
                     return OperMenu.ProcesaImage(ref rutaActual);
                 case 5:
-                    Console.Clear();
+                    Style.LimpiarPantalla();
                     int subopcion = Style.MostrarMenuAgrupar();
-                    EjecutarAgrupacion(subopcion);
+                    EjecutarAgrupacion(subopcion, rutaActual);
                     return true;
                 case 6:
                     return false;
@@ -96,14 +96,13 @@ namespace ImageMetadataTools.UI
         }
 
         // Ejecuta la acción de agrupación según la subopción seleccionada.
-        private static void EjecutarAgrupacion(int subopcion)
+        private static void EjecutarAgrupacion(int subopcion, string rutaActual)
         {
             switch (subopcion)
             {
                 case 1:
-                    Console.Clear();
-                    rutaDestino = PedirRuta();
-                    Agrupar.AgruparPorAño(rutaDestino);
+                    Style.LimpiarPantalla();
+                    Agrupar.AgruparPorAño(rutaActual);
                     break;
                 case 2:
                     Style.MostrarComentarios("\nAgrupando imágenes por lugar", ConsoleColor.Green);
